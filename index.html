@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jankx Theme Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --border: rgba(255, 255, 255, 0.1);
+            --glow: rgba(102, 126, 234, 0.3);
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(240, 147, 251, 0.05) 0%, transparent 50%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 40px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+            font-weight: 800;
+            box-shadow: 0 8px 32px var(--glow);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .version-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: var(--primary-gradient);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 16px var(--glow);
+        }
+
+        /* Language selector */
+        .lang-section {
+            margin: 60px 0;
+        }
+
+        .section-title {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .lang-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .lang-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lang-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .lang-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .lang-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .lang-flag {
+            font-size: 48px;
+            line-height: 1;
+        }
+
+        .lang-info h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .lang-info p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .lang-arrow {
+            margin-left: auto;
+            font-size: 20px;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .lang-card:hover .lang-arrow {
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        /* Version comparison */
+        .version-section {
+            margin: 80px 0;
+        }
+
+        .version-table {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .version-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .version-table th,
+        .version-table td {
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .version-table th {
+            background: rgba(255,255,255,0.02);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .version-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .version-table td:first-child {
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-lite {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+        }
+
+        .badge-pro {
+            background: rgba(118, 75, 162, 0.2);
+            color: #a78bfa;
+        }
+
+        .badge-pro-gradient {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        /* Quick start */
+        .quick-section {
+            margin: 80px 0;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .quick-card {
+            padding: 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .quick-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .quick-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .quick-card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .quick-card p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        .quick-card pre {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+
+        /* Badge legend */
+        .legend-section {
+            margin: 60px 0;
+            text-align: center;
+        }
+
+        .legend-items {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0 40px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .heart {
+            color: #ef4444;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 1rem;
+            }
+
+            .version-table th,
+            .version-table td {
+                padding: 12px 16px;
+                font-size: 0.875rem;
+            }
+
+            .legend-items {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">J</div>
+            <h1>Jankx Theme</h1>
+            <p class="tagline">A Modern, Flexible WordPress Theme Framework</p>
+            <div class="version-badge">⭐ PRO VERSION</div>
+        </header>
+
+        <!-- Language Selector -->
+        <section class="lang-section">
+            <p class="section-title">🌐 Select Language / Chọn Ngôn Ngữ</p>
+            <div class="lang-grid">
+                <a href="./en/" class="lang-card">
+                    <span class="lang-flag">🇺🇸</span>
+                    <div class="lang-info">
+                        <h3>English</h3>
+                        <p>Complete documentation in English</p>
+                    </div>
+                    <span class="lang-arrow">→</span>
+                </a>
+                <a href="./vi/" class="lang-card">
+                    <span class="lang-flag">🇻🇳</span>
+                    <div class="lang-info">
+                        <h3>Tiếng Việt</h3>
+                        <p>Tài liệu đầy đủ bằng tiếng Việt</p>
+                    </div>
+                    <span class="lang-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Version Comparison -->
+        <section class="version-section">
+            <p class="section-title">📦 Versions / Phiên Bản</p>
+            <div class="version-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature / Tính Năng</th>
+                            <th style="text-align: center;">Lite</th>
+                            <th style="text-align: center;">Pro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Core Framework</td>
+                            <td style="text-align: center;"><span class="badge badge-lite">✓</span></td>
+                            <td style="text-align: center;"><span class="badge badge-pro-gradient">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Basic Layouts</td>
+                            <td style="text-align: center;"><span class="badge badge-lite">✓</span></td>
+                            <td style="text-align: center;"><span class="badge badge-pro-gradient">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Gutenberg Blocks</td>
+                            <td style="text-align: center;"><span class="badge badge-lite">5 blocks</span></td>
+                            <td style="text-align: center;"><span class="badge badge-pro-gradient">40+ blocks</span></td>
+                        </tr>
+                        <tr>
+                            <td>Extensions System</td>
+                            <td style="text-align: center;"><span class="badge badge-lite">✓</span></td>
+                            <td style="text-align: center;"><span class="badge badge-pro-gradient">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Admin Panel</td>
+                            <td style="text-align: center;"><span class="badge badge-lite">Basic</span></td>
+                            <td style="text-align: center;"><span class="badge badge-pro-gradient">Advanced</span></td>
+                        </tr>
+                        <tr>
+                            <td>Theme Options</td>
+                            <td style="text-align: center;"><span class="badge badge-lite">Limited</span></td>
+                            <td style="text-align: center;"><span class="badge badge-pro-gradient">Full</span></td>
+                        </tr>
+                        <tr>
+                            <td>Custom Fonts</td>
+                            <td style="text-align: center;"><span class="badge badge-lite">—</span></td>
+                            <td style="text-align: center;"><span class="badge badge-pro-gradient">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Icon System</td>
+                            <td style="text-align: center;"><span class="badge badge-lite">—</span></td>
+                            <td style="text-align: center;"><span class="badge badge-pro-gradient">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>License System</td>
+                            <td style="text-align: center;"><span class="badge badge-lite">—</span></td>
+                            <td style="text-align: center;"><span class="badge badge-pro-gradient">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Priority Support</td>
+                            <td style="text-align: center;"><span class="badge badge-lite">—</span></td>
+                            <td style="text-align: center;"><span class="badge badge-pro-gradient">✓</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Badge Legend -->
+        <section class="legend-section">
+            <p class="section-title">🏷️ Feature Badges / Nhãn Tính Năng</p>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <span class="badge badge-pro">PRO</span>
+                    <span>Pro version only</span>
+                </div>
+                <div class="legend-item">
+                    <span class="badge badge-lite">LITE</span>
+                    <span>Available in Lite</span>
+                </div>
+                <div class="legend-item">
+                    <span class="badge badge-pro">PRO</span> + <span class="badge badge-lite">LITE</span>
+                    <span>Available in both</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section class="quick-section">
+            <p class="section-title">🚀 Quick Start / Bắt Đầu Nhanh</p>
+            <div class="quick-grid">
+                <div class="quick-card">
+                    <div class="quick-icon">📥</div>
+                    <h3>Installation</h3>
+                    <p>Clone repository và cài đặt dependencies</p>
+                    <pre>git clone https://github.com/jankx/theme.git
+cd theme
+composer install</pre>
+                </div>
+                <div class="quick-card">
+                    <div class="quick-icon">🧪</div>
+                    <h3>Testing</h3>
+                    <p>Chạy test suite để đảm bảo mọi thứ hoạt động</p>
+                    <pre>./vendor/bin/phpunit</pre>
+                </div>
+                <div class="quick-card">
+                    <div class="quick-icon">🏗️</div>
+                    <h3>Development</h3>
+                    <p>Build assets cho production</p>
+                    <pre>npm install
+npm run build</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-links">
+                <a href="https://github.com/jankx/theme" target="_blank">GitHub</a>
+                <a href="https://github.com/jankx/theme/issues" target="_blank">Issues</a>
+                <a href="https://github.com/jankx/theme/discussions" target="_blank">Discussions</a>
+            </div>
+            <p class="copyright">Made with <span class="heart">❤</span> by the Jankx Team</p>
+        </footer>
+    </div>
+</body>
+</html>

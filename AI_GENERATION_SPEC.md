@@ -79,3 +79,20 @@ Refer to:
 - `Jankx\Layouts\DynamicDataLayout\Parsers\CarouselLayoutDataParser` for level 2 CSS usage.
 - `Jankx\Gutenberg\Blocks\AuthorBoxBlock` for a complete block implementation.
 - `Jankx\Layouts\templates\post-layout\carousel.php` for clean template implementation.
+
+## 8. Absolute Layout Parity Rule
+
+To ensure the output is **absolutely accurate** and identical between the Gutenberg Editor and the Frontend:
+
+1. **DOM Skeleton Sync**: The HTML structure (tags, nesting) in `index.tsx` (Editor) and `Block.php` (Frontend) must be **identical**.
+2. **Class Consistency**: Every class added to the frontend wrapper via `\get_block_wrapper_attributes()` must also be present in the editor via `useBlockProps()`.
+3. **No Dynamic Logic in HTML**: Avoid logic like `if ($something) echo '<div>'` inside templates. Use CSS classes to hide/show elements instead, so the DOM skeleton remains consistent.
+
+## 9. CSS Variable Bridging
+
+Instead of complex style calculations in both JS and PHP, use CSS Variables:
+
+- **Logic**: Attributes (like `gap`, `columns`, `primaryColor`) are mapped to CSS Variables (e.g., `--jankx-gap`, `--jankx-columns`).
+- **PHP**: Inject variables into the style attribute of the wrapper via `AssetResolver::INSTANCE`.
+- **JS**: Pass variables into the `style` prop of `useBlockProps`.
+- **CSS**: The block-level `.scss` uses these variables for layout, ensuring both environments render exactly the same layout without duplicated logic.
