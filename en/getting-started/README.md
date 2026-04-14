@@ -16,7 +16,7 @@ Welcome to Jankx Theme! This guide will help you get up and running quickly.
 ### Method 1: Via Composer (Recommended)
 
 ```bash
-composer require jankx/theme
+composer require jankx/jankx
 ```
 
 ### Method 2: Manual Installation

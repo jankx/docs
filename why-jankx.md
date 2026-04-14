@@ -357,7 +357,7 @@ $registry->resolve('list', ['style' => 'compact'])->render($breaking_query);
 
 ```bash
 # Install via Composer
-composer require jankx/theme
+composer require jankx/jankx
 
 # Or clone for development
 git clone https://github.com/jankx/jankx-lite.git

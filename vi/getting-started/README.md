@@ -16,7 +16,7 @@ Chào mừng đến với Jankx Theme! Hướng dẫn này sẽ giúp bạn cài
 ### Cách 1: Qua Composer (Khuyến Nghị)
 
 ```bash
-composer require jankx/theme
+composer require jankx/jankx
 ```
 
 ### Cách 2: Cài Đặt Thủ Công
