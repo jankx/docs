@@ -277,18 +277,6 @@
             color: #a78bfa;
         }
 
-        .ascii-art {
-            font-family: 'JetBrains Mono', monospace;
-            background: rgba(0,0,0,0.3);
-            padding: 20px;
-            border-radius: 8px;
-            color: var(--text-secondary);
-            margin: 20px 0;
-            overflow-x: auto;
-            font-size: 0.8rem;
-            line-height: 1.4;
-        }
-
         @media (max-width: 900px) {
             .main-layout { grid-template-columns: 1fr; }
             .sidebar { display: none; }
@@ -351,8 +339,7 @@
                 <p>The Jankx Layout System provides a powerful, flexible way to manage dynamic layouts for your WordPress theme.</p>
 
                 <h2 id="overview">Overview</h2>
-                <div class="ascii-art">
-┌─────────────────────────────────────────┐
+                <pre><code>┌─────────────────────────────────────────┐
 │         Layout Registry                 │
 │  ┌─────────┐ ┌─────────┐ ┌─────────┐  │
 │  │  Grid   │ │  List   │ │Carousel │  │
@@ -360,8 +347,7 @@
 │  └────┬────┘ └────┬────┘ └────┬────┘  │
 │       └────────────┴────────────┘       │
 │              BlockTemplate              │
-└─────────────────────────────────────────┘
-                </div>
+└─────────────────────────────────────────┘</code></pre>
 
                 <h2 id="registry">Layout Registry</h2>
                 <p>The <code>LayoutRegistry</code> manages all registered layouts and provides dependency injection support:</p>
