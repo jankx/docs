@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout System - Jankx Theme Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .logo-text { font-weight: 600; }
+
+        nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active { color: var(--primary); }
+
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .lang-switch:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .sidebar-section { margin-bottom: 32px; }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .sidebar-links { list-style: none; }
+        .sidebar-links li { margin-bottom: 4px; }
+
+        .sidebar-links a {
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar-links a:hover, .sidebar-links a.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .content { max-width: none; }
+
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 40px 0 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 24px 0 12px;
+        }
+
+        .content p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .content pre {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .content p code, .content li code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--primary);
+        }
+
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.9375rem;
+        }
+
+        .content th, .content td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content th {
+            background: rgba(255,255,255,0.02);
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content ul, .content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .content li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .content a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .content a:hover { text-decoration: underline; }
+
+        .content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 40px 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-pro {
+            background: rgba(118, 75, 162, 0.2);
+            color: #a78bfa;
+        }
+
+        .ascii-art {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            header { position: static; background: var(--bg-dark); }
+            nav { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .content h1 { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../" class="logo">
+                    <span class="logo-icon">J</span>
+                    <span class="logo-text">Jankx Theme</span>
+                </a>
+                <nav>
+                    <a href="./" class="active">Docs</a>
+                    <a href="https://github.com/jankx/theme" target="_blank">GitHub</a>
+                    <a href="../../vi/layout-system/" class="lang-switch">🇻🇳 VI</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Layout System</p>
+                    <ul class="sidebar-links">
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#registry">Layout Registry</a></li>
+                        <li><a href="#available">Available Layouts</a></li>
+                        <li><a href="#custom">Custom Layouts</a></li>
+                        <li><a href="#examples">Examples</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Other</p>
+                    <ul class="sidebar-links">
+                        <li><a href="../">← Back to Docs</a></li>
+                        <li><a href="../getting-started/">Getting Started</a></li>
+                        <li><a href="../admin/">Admin System</a></li>
+                        <li><a href="../extensions/">Extensions</a></li>
+                        <li><a href="../testing/">Testing</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="content">
+                <h1>Layout System</h1>
+                <p>The Jankx Layout System provides a powerful, flexible way to manage dynamic layouts for your WordPress theme.</p>
+
+                <h2 id="overview">Overview</h2>
+                <div class="ascii-art">
+┌─────────────────────────────────────────┐
+│         Layout Registry                 │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐  │
+│  │  Grid   │ │  List   │ │Carousel │  │
+│  │ Layout  │ │ Layout  │ │ Layout  │  │
+│  └────┬────┘ └────┬────┘ └────┬────┘  │
+│       └────────────┴────────────┘       │
+│              BlockTemplate              │
+└─────────────────────────────────────────┘
+                </div>
+
+                <h2 id="registry">Layout Registry</h2>
+                <p>The <code>LayoutRegistry</code> manages all registered layouts and provides dependency injection support:</p>
+
+                <pre><code>use Jankx\Layouts\DynamicDataLayout\LayoutRegistry;
+use Jankx\Foundation\Application;
+
+$app = Application::getInstance();
+$registry = new LayoutRegistry($app);
+
+// Register a layout
+$registry->register('grid', GridLayout::class);
+
+// Check if layout exists
+if ($registry->has('grid')) {
+    $layout = $registry->resolve('grid', ['columns' => 3]);
+}</code></pre>
+
+                <h3>Methods</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>register(string $name, string $class)</code></td><td>Register a new layout</td></tr>
+                        <tr><td><code>unregister(string $name)</code></td><td>Remove a layout</td></tr>
+                        <tr><td><code>has(string $name)</code></td><td>Check if layout exists</td></tr>
+                        <tr><td><code>get(string $name)</code></td><td>Get layout class name</td></tr>
+                        <tr><td><code>resolve(string $name, array $options)</code></td><td>Create layout instance</td></tr>
+                        <tr><td><code>all()</code></td><td>Get all registered layouts</td></tr>
+                        <tr><td><code>getNames()</code></td><td>Get all layout names</td></tr>
+                    </tbody>
+                </table>
+
+                <h2 id="available">Available Layouts</h2>
+
+                <h3>Grid Layout</h3>
+                <pre><code>use Jankx\Layouts\DynamicDataLayout\BlockLayouts\GridLayout;
+
+$layout = new GridLayout();
+$layout->setOptions([
+    'columns' => 3,
+    'gap' => 20,
+    'class_name' => 'my-grid',
+]);
+
+echo $layout->render($data);</code></pre>
+
+                <p><strong>Options:</strong></p>
+                <ul>
+                    <li><code>columns</code> (int): Number of columns (1-12)</li>
+                    <li><code>gap</code> (int): Gap between items in pixels</li>
+                    <li><code>responsive</code> (bool): Enable responsive behavior</li>
+                    <li><code>class_name</code> (string): CSS class name</li>
+                </ul>
+
+                <h3>List Layout</h3>
+                <pre><code>use Jankx\Layouts\DynamicDataLayout\BlockLayouts\ListLayout;
+
+$layout = new ListLayout();
+$layout->setOptions([
+    'style' => 'vertical',
+    'class_name' => 'my-list',
+]);</code></pre>
+
+                <p><strong>Options:</strong></p>
+                <ul>
+                    <li><code>style</code> (string): 'vertical' | 'horizontal'</li>
+                    <li><code>class_name</code> (string): CSS class name</li>
+                </ul>
+
+                <h3>Carousel Layout <span class="badge badge-pro">PRO</span></h3>
+                <pre><code>use Jankx\Layouts\DynamicDataLayout\BlockLayouts\CarouselLayout;
+
+$layout = new CarouselLayout();
+$layout->setOptions([
+    'slides_per_view' => 3,
+    'autoplay' => true,
+    'navigation' => true,
+]);</code></pre>
+
+                <p><strong>Options:</strong></p>
+                <ul>
+                    <li><code>slides_per_view</code> (int): Number of visible slides</li>
+                    <li><code>autoplay</code> (bool): Enable autoplay</li>
+                    <li><code>navigation</code> (bool): Show navigation arrows</li>
+                    <li><code>pagination</code> (bool): Show pagination dots</li>
+                </ul>
+
+                <h2 id="custom">Creating Custom Layouts</h2>
+
+                <h3>Step 1: Create Layout Class</h3>
+                <pre><code>&lt;?php
+// includes/MyTheme/Layouts/CustomLayout.php
+
+namespace MyTheme\Layouts;
+
+use Jankx\Layouts\DynamicDataLayout\BlockTemplateLayout;
+
+class MasonryLayout extends BlockTemplateLayout
+{
+    protected $defaultOptions = [
+        'columns' => 3,
+        'gap' => 15,
+        'class_name' => 'masonry-layout',
+    ];
+
+    public function getHtmlStructure(): string
+    {
+        return '&lt;div class="{{class_name}} masonry-grid"&gt;
+            {{#items}}
+                &lt;div class="masonry-item" style="margin-bottom: {{gap}}px;"&gt;
+                    {{content}}
+                &lt;/div&gt;
+            {{/items}}
+        &lt;/div&gt;';
+    }
+}</code></pre>
+
+                <h3>Step 2: Register Layout</h3>
+                <pre><code>// functions.php or service provider
+
+use Jankx\Layouts\DynamicDataLayout\LayoutRegistry;
+use MyTheme\Layouts\MasonryLayout;
+
+add_action('jankx/layouts/register', function(LayoutRegistry $registry) {
+    $registry->register('masonry', MasonryLayout::class);
+});</code></pre>
+
+                <h2 id="examples">Usage Examples</h2>
+
+                <h3>Dynamic Data Block</h3>
+                <pre><code>use Jankx\Gutenberg\Blocks\DynamicDataLayoutBlock;
+
+class MyCustomBlock extends DynamicDataLayoutBlock
+{
+    public function render($attributes, $content)
+    {
+        $layoutName = $attributes['layout'] ?? 'grid';
+        $layout = LayoutRegistry::getInstance()->resolve($layoutName, [
+            'columns' => $attributes['columns'] ?? 3,
+        ]);
+
+        $data = $this->fetchData($attributes);
+        return $layout->render($data);
+    }
+}</code></pre>
+
+                <h3>Template Integration</h3>
+                <pre><code>// In your template file
+$layout = LayoutRegistry::getInstance()->resolve('list', [
+    'style' => 'vertical',
+    'class_name' => 'post-list',
+]);
+
+$query = new WP_Query(['posts_per_page' => 10]);
+$items = [];
+
+while ($query->have_posts()) {
+    $query->the_post();
+    $items[] = [
+        'title' => get_the_title(),
+        'content' => get_the_excerpt(),
+        'link' => get_permalink(),
+    ];
+}
+
+echo $layout->render(['items' => $items]);</code></pre>
+
+                <h2>Best Practices</h2>
+                <ol>
+                    <li><strong>Always use LayoutRegistry</strong>: Don't instantiate layouts directly, use the registry for proper DI</li>
+                    <li><strong>Validate options</strong>: Use <code>setOptions()</code> with type checking</li>
+                    <li><strong>Cache renders</strong>: For expensive layouts, consider caching the output</li>
+                    <li><strong>Responsive design</strong>: Use the built-in responsive options</li>
+                    <li><strong>Accessibility</strong>: Include ARIA labels and proper semantic HTML</li>
+                </ol>
+
+                <hr>
+                <p style="text-align: center; color: var(--text-muted);">
+                    <a href="../">← Back to Documentation</a>
+                </p>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

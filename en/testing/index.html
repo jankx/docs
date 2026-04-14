@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Guide - Jankx Theme Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .logo-text { font-weight: 600; }
+
+        nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active { color: var(--primary); }
+
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .lang-switch:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .sidebar-section { margin-bottom: 32px; }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .sidebar-links { list-style: none; }
+        .sidebar-links li { margin-bottom: 4px; }
+
+        .sidebar-links a {
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar-links a:hover, .sidebar-links a.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .content { max-width: none; }
+
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 40px 0 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 24px 0 12px;
+        }
+
+        .content p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .content pre {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .content p code, .content li code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--primary);
+        }
+
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.9375rem;
+        }
+
+        .content th, .content td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content th {
+            background: rgba(255,255,255,0.02);
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content ul, .content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .content li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .content a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .content a:hover { text-decoration: underline; }
+
+        .content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 40px 0;
+        }
+
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            header { position: static; background: var(--bg-dark); }
+            nav { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .content h1 { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../" class="logo">
+                    <span class="logo-icon">J</span>
+                    <span class="logo-text">Jankx Theme</span>
+                </a>
+                <nav>
+                    <a href="./" class="active">Docs</a>
+                    <a href="https://github.com/jankx/theme" target="_blank">GitHub</a>
+                    <a href="../../vi/testing/" class="lang-switch">🇻🇳 VI</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Testing</p>
+                    <ul class="sidebar-links">
+                        <li><a href="#installation">Installation</a></li>
+                        <li><a href="#structure">Test Structure</a></li>
+                        <li><a href="#running">Running Tests</a></li>
+                        <li><a href="#writing">Writing Tests</a></li>
+                        <li><a href="#coverage">Code Coverage</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Other</p>
+                    <ul class="sidebar-links">
+                        <li><a href="../">← Back to Docs</a></li>
+                        <li><a href="../getting-started/">Getting Started</a></li>
+                        <li><a href="../layout-system/">Layout System</a></li>
+                        <li><a href="../admin/">Admin System</a></li>
+                        <li><a href="../extensions/">Extensions</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="content">
+                <h1>Testing Guide</h1>
+                <p>Comprehensive testing documentation for Jankx Theme.</p>
+
+                <h2 id="installation">Getting Started</h2>
+
+                <h3>Installation</h3>
+                <pre><code># Install PHPUnit and dependencies
+composer install --dev
+
+# Verify installation
+./vendor/bin/phpunit --version</code></pre>
+
+                <h3>Configuration</h3>
+                <p><code>phpunit.xml</code>:</p>
+                <pre><code>&lt;phpunit bootstrap="tests/bootstrap.php"
+         colors="true"
+         verbose="true"&gt;
+    &lt;testsuites&gt;
+        &lt;testsuite name="Admin"&gt;
+            &lt;directory&gt;tests/Admin&lt;/directory&gt;
+        &lt;/testsuite&gt;
+        &lt;testsuite name="Extensions"&gt;
+            &lt;directory&gt;tests/Extensions&lt;/directory&gt;
+        &lt;/testsuite&gt;
+        &lt;testsuite name="Layouts"&gt;
+            &lt;directory&gt;tests/Layouts&lt;/directory&gt;
+        &lt;/testsuite&gt;
+        &lt;testsuite name="Services"&gt;
+            &lt;directory&gt;tests/Services&lt;/directory&gt;
+        &lt;/testsuite&gt;
+    &lt;/testsuites&gt;
+    
+    &lt;coverage processUncoveredFiles="true"&gt;
+        &lt;include&gt;
+            &lt;directory suffix=".php"&gt;includes&lt;/directory&gt;
+        &lt;/include&gt;
+    &lt;/coverage&gt;
+&lt;/phpunit&gt;</code></pre>
+
+                <h2 id="structure">Test Structure</h2>
+                <pre><code>tests/
+├── Admin/
+│   └── Handlers/
+│       └── FormHandlerTest.php    # Admin form handling tests
+├── Extensions/
+│   └── ExtensionManagerTest.php   # Extension system tests
+├── Layouts/
+│   └── DynamicDataLayout/
+│       └── LayoutRegistryTest.php   # Layout registry tests
+├── Services/
+│   ├── Fonts/
+│   │   └── FontsRepositoryTest.php # Font management tests
+│   └── GutenbergServiceTest.php   # Gutenberg service tests
+├── Helpers/
+│   └── TestCase.php               # Base test case class
+├── bootstrap.php                  # Test bootstrap
+└── phpunit.xml                    # PHPUnit configuration</code></pre>
+
+                <h2 id="running">Running Tests</h2>
+
+                <h3>Run All Tests</h3>
+                <pre><code>./vendor/bin/phpunit</code></pre>
+
+                <h3>Run Specific Test Suite</h3>
+                <pre><code># Admin tests only
+./vendor/bin/phpunit --testsuite="Admin"
+
+# Extension tests only
+./vendor/bin/phpunit --testsuite="Extensions"
+
+# Layout tests only
+./vendor/bin/phpunit --testsuite="Layouts"</code></pre>
+
+                <h3>Run Specific Test Class</h3>
+                <pre><code>./vendor/bin/phpunit --filter="FormHandlerTest"
+./vendor/bin/phpunit --filter="ExtensionManagerTest"
+./vendor/bin/phpunit --filter="LayoutRegistryTest"</code></pre>
+
+                <h3>Run with Coverage</h3>
+                <pre><code># HTML report
+./vendor/bin/phpunit --coverage-html coverage/
+
+# Text report
+./vendor/bin/phpunit --coverage-text
+
+# XML report for CI
+./vendor/bin/phpunit --coverage-xml coverage/xml/</code></pre>
+
+                <h2 id="writing">Writing Tests</h2>
+
+                <h3>Basic Test Class</h3>
+                <pre><code>&lt;?php
+
+namespace Tests\Admin\Handlers;
+
+use Jankx\Admin\Handlers\FormHandler;
+use Jankx\Foundation\Application;
+use Tests\Helpers\TestCase;
+
+class FormHandlerTest extends TestCase
+{
+    protected $formHandler;
+    protected $app;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        
+        $this->app = new Application();
+        $this->formHandler = new FormHandler($this->app);
+    }
+
+    public function testConstructor()
+    {
+        $this->assertInstanceOf(FormHandler::class, $this->formHandler);
+    }
+
+    public function testHandleRequestsProcessesValidNonce()
+    {
+        // Mock WordPress nonce verification
+        $GLOBALS['mock_wp_verify_nonce'] = true;
+        
+        $_POST = [
+            'jankx_action' => 'save_settings',
+            'jankx_nonce' => 'valid_nonce',
+        ];
+        
+        $result = $this->formHandler->handleRequests();
+        
+        $this->assertTrue($result);
+    }
+}</code></pre>
+
+                <h3>Using Mockery</h3>
+                <pre><code>use Mockery;
+
+public function testExtensionActivation()
+{
+    // Create mock extension
+    $mockExtension = Mockery::mock('Jankx\Extensions\AbstractExtension');
+    $mockExtension->shouldReceive('activate')->once();
+    $mockExtension->shouldReceive('getId')->andReturn('test-extension');
+    
+    // Register and activate
+    $manager = new ExtensionManager($this->app);
+    $manager->add_extension('test', $mockExtension);
+    $manager->activate_extension('test');
+    
+    $this->assertTrue($manager->is_extension_active('test'));
+}</code></pre>
+
+                <h3>Testing with Facades</h3>
+                <pre><code>use Jankx\Facades\Config;
+
+public function testConfigFacade()
+{
+    // Set up facade application
+    Config::setFacadeApplication($this->app);
+    
+    // Mock config value
+    $this->app->shouldReceive('get')
+        ->with('config.framework')
+        ->andReturn('jankx');
+    
+    $this->assertEquals('jankx', Config::get('framework'));
+}</code></pre>
+
+                <h2 id="coverage">Code Coverage</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Tests</th>
+                            <th>Coverage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Admin/Handlers</td><td>15</td><td>High</td></tr>
+                        <tr><td>Extensions</td><td>12</td><td>Medium</td></tr>
+                        <tr><td>Layouts</td><td>14</td><td>High</td></tr>
+                        <tr><td>Services/Fonts</td><td>15</td><td>Medium</td></tr>
+                        <tr><td>Services/Gutenberg</td><td>11</td><td>Medium</td></tr>
+                        <tr><td><strong>Total</strong></td><td><strong>266</strong></td><td><strong>Good</strong></td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Generating Reports</h3>
+                <pre><code># Generate HTML coverage report
+./vendor/bin/phpunit --coverage-html coverage/
+
+# Open in browser
+open coverage/index.html</code></pre>
+
+                <h2>Best Practices</h2>
+                <ol>
+                    <li><strong>Test Naming</strong> - Use descriptive names like <code>testHandleRequestsReturnsFalseForInvalidNonce</code></li>
+                    <li><strong>Test Structure (AAA Pattern)</strong> - Arrange, Act, Assert</li>
+                    <li><strong>One Concept Per Test</strong> - Separate concerns into different test methods</li>
+                    <li><strong>Use Assertions Descriptively</strong> - Choose the right assertion for the job</li>
+                    <li><strong>Clean Up Resources</strong> - Reset state in <code>tearDown()</code></li>
+                </ol>
+
+                <h2>Troubleshooting</h2>
+
+                <p><strong>Issue:</strong> <code>A facade root has not been set</code></p>
+                <pre><code>// Solution: Set facade application in setUp()
+\Jankx\Facades\App::setFacadeApplication($this->app);</code></pre>
+
+                <p><strong>Issue:</strong> <code>Call to undefined function</code></p>
+                <pre><code>// Solution: Add mock to bootstrap.php
+if (!function_exists('my_wp_function')) {
+    function my_wp_function() {
+        return $GLOBALS['mock_my_wp_function'] ?? null;
+    }
+}</code></pre>
+
+                <p><strong>Issue:</strong> <code>InvalidCountException</code> with Mockery</p>
+                <pre><code>// Solution: Close Mockery properly
+tearDown() {
+    Mockery::close();
+    parent::tearDown();
+}</code></pre>
+
+                <hr>
+                <p style="text-align: center; color: var(--text-muted);">
+                    <a href="../">← Back to Documentation</a>
+                </p>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Extension - Jankx Theme Tài Liệu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .logo-text { font-weight: 600; }
+
+        nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active { color: var(--primary); }
+
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .lang-switch:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .sidebar-section { margin-bottom: 32px; }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .sidebar-links { list-style: none; }
+        .sidebar-links li { margin-bottom: 4px; }
+
+        .sidebar-links a {
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar-links a:hover, .sidebar-links a.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .content { max-width: none; }
+
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 40px 0 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 24px 0 12px;
+        }
+
+        .content p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .content pre {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .content p code, .content li code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--primary);
+        }
+
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.9375rem;
+        }
+
+        .content th, .content td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content th {
+            background: rgba(255,255,255,0.02);
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content ul, .content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .content li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .content a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .content a:hover { text-decoration: underline; }
+
+        .content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 40px 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-pro {
+            background: rgba(118, 75, 162, 0.2);
+            color: #a78bfa;
+        }
+
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            header { position: static; background: var(--bg-dark); }
+            nav { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .content h1 { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../" class="logo">
+                    <span class="logo-icon">J</span>
+                    <span class="logo-text">Jankx Theme</span>
+                </a>
+                <nav>
+                    <a href="./" class="active">Tài Liệu</a>
+                    <a href="https://github.com/jankx/theme" target="_blank">GitHub</a>
+                    <a href="../../en/extensions/" class="lang-switch">🇺🇸 EN</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Extensions</p>
+                    <ul class="sidebar-links">
+                        <li><a href="#tong-quan">Tổng Quan</a></li>
+                        <li><a href="#manager">Extension Manager</a></li>
+                        <li><a href="#tao">Tạo Extensions</a></li>
+                        <li><a href="#manifest">Manifest</a></li>
+                        <li><a href="#vong-doi">Vòng Đời</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Khác</p>
+                    <ul class="sidebar-links">
+                        <li><a href="../">← Quay Lại</a></li>
+                        <li><a href="../getting-started/">Bắt Đầu</a></li>
+                        <li><a href="../layout-system/">Hệ Thống Layout</a></li>
+                        <li><a href="../admin/">Hệ Thống Quản Trị</a></li>
+                        <li><a href="../testing/">Kiểm Thử</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="content">
+                <h1>Hệ Thống Extension</h1>
+                <p>Hệ Thống Extension của Jankx cho phép bạn module hóa chức năng và tải tính năng động.</p>
+
+                <h2 id="tong-quan">Tổng Quan</h2>
+                <pre><code>┌─────────────────────────────────────────┐
+│         ExtensionManager                │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐  │
+│  │ Plugin  │ │ Theme   │ │ Custom  │  │
+│  │ Ext A   │ │ Ext B   │ │ Ext C   │  │
+│  └────┬────┘ └────┬────┘ └────┬────┘  │
+│       └────────────┴────────────┘       │
+│              Manifest                    │
+└─────────────────────────────────────────┘</code></pre>
+
+                <h3>ExtensionManager</h3>
+                <p>Trung tâm quản lý tất cả các extensions:</p>
+
+                <pre><code>use Jankx\Extensions\ExtensionManager;
+
+// Lấy singleton instance
+$manager = ExtensionManager::getInstance();
+
+// Kiểm tra extension đang active
+if ($manager->is_extension_active('my-extension')) {
+    // Extension đang active
+}
+
+// Lấy tất cả extensions
+$extensions = $manager->get_extensions();</code></pre>
+
+                <h2 id="manager">Extension Manager API</h2>
+
+                <pre><code>// Kích hoạt/Hủy kích hoạt
+$manager->activate_extension('my-extension');
+$manager->deactivate_extension('my-extension');
+
+// Cài đặt/Gỡ cài đặt
+$manager->install_extension('my-extension');
+$manager->uninstall_extension('my-extension');
+
+// Yêu cầu
+$manager->require_extension('required-ext', true);   // Bắt buộc
+$manager->require_extension('optional-ext', false);  // Khuyến nghị
+
+// Kiểm tra
+$manager->is_extension_active('my-extension');
+$manager->is_extension_required('my-extension');
+$manager->is_extension_installed('my-extension');</code></pre>
+
+                <h2 id="tao">Tạo Extensions</h2>
+
+                <h3>Bước 1: Tạo Extension Class</h3>
+                <pre><code>&lt;?php
+namespace Jankx\Extensions\MyExtension;
+
+use Jankx\Extensions\AbstractExtension;
+
+class MyExtension extends AbstractExtension
+{
+    protected $id = 'my-extension';
+    protected $name = 'My Extension';
+    protected $version = '1.0.0';
+    protected $author = 'Your Name';
+    protected $description = 'Mô tả extension';
+    
+    public function activate(): void
+    {
+        parent::activate();
+        
+        // Logic kích hoạt
+        $this->register_post_types();
+        $this->register_taxonomies();
+    }
+    
+    public function deactivate(): void
+    {
+        // Logic cleanup
+        parent::deactivate();
+    }
+    
+    public function boot(): void
+    {
+        // Chạy sau khi tất cả extensions được load
+        add_action('init', [$this, 'init']);
+    }
+}</code></pre>
+
+                <h3>Bước 2: Tạo Manifest</h3>
+                <pre><code>{
+    "name": "My Extension",
+    "id": "my-extension",
+    "version": "1.0.0",
+    "author": "Your Name",
+    "description": "Mô tả extension",
+    "main": "MyExtension.php",
+    "class": "Jankx\\Extensions\\MyExtension\\MyExtension",
+    "requires": {
+        "php": ">=7.4",
+        "wordpress": ">=5.8",
+        "jankx": ">=2.0"
+    },
+    "dependencies": [
+        "other-extension"
+    ]
+}</code></pre>
+
+                <h3>Bước 3: Đăng Ký Extension</h3>
+                <pre><code>use Jankx\Extensions\ExtensionManager;
+use Jankx\Extensions\MyExtension\MyExtension;
+
+add_action('jankx/extensions/init', function(ExtensionManager $manager) {
+    $manager->add_extension('my-extension', new MyExtension());
+});</code></pre>
+
+                <h2 id="manifest">Extension Manifest</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Trường</th>
+                            <th>Kiểu</th>
+                            <th>Mô Tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>name</code></td><td>string</td><td>Tên hiển thị</td></tr>
+                        <tr><td><code>id</code></td><td>string</td><td>ID duy nhất</td></tr>
+                        <tr><td><code>version</code></td><td>string</td><td>Semantic version</td></tr>
+                        <tr><td><code>author</code></td><td>string</td><td>Tên tác giả</td></tr>
+                        <tr><td><code>description</code></td><td>string</td><td>Mô tả</td></tr>
+                        <tr><td><code>main</code></td><td>string</td><td>File entry point</td></tr>
+                        <tr><td><code>class</code></td><td>string</td><td>Tên class đầy đủ</td></tr>
+                        <tr><td><code>requires</code></td><td>object</td><td>Yêu cầu (php, wordpress, jankx)</td></tr>
+                        <tr><td><code>dependencies</code></td><td>array</td><td>Extensions phụ thuộc</td></tr>
+                    </tbody>
+                </table>
+
+                <h2 id="vong-doi">Vòng Đời Extension</h2>
+
+                <pre><code>class MyExtension extends AbstractExtension
+{
+    // Gọi khi cài đặt
+    public function install(): bool
+    {
+        // Tạo tables, options, etc.
+        return true;
+    }
+    
+    // Gọi khi kích hoạt
+    public function activate(): void
+    {
+        // Đăng ký hooks, flush rewrite rules
+    }
+    
+    // Gọi sau khi tất cả extensions được load
+    public function boot(): void
+    {
+        // Khởi tạo services
+    }
+    
+    // Gọi trên WordPress init
+    public function init(): void
+    {
+        // Đăng ký shortcodes, widgets
+    }
+    
+    // Gọi khi hủy kích hoạt
+    public function deactivate(): void
+    {
+        // Cleanup, flush cache
+    }
+    
+    // Gọi khi gỡ cài đặt
+    public function uninstall(): bool
+    {
+        // Xóa tables, options
+        return true;
+    }
+}</code></pre>
+
+                <h2>Tính Năng Pro</h2>
+
+                <h3>License Management <span class="badge badge-pro">PRO</span></h3>
+                <pre><code>use Jankx\Facades\License;
+
+// Kiểm tra license
+if (License::is_valid()) {
+    // License hợp lệ
+}
+
+// Kích hoạt license
+License::activate('your-license-key');
+
+// Lấy thông tin license
+$info = License::get_info();</code></pre>
+
+                <h3>Auto-Updates <span class="badge badge-pro">PRO</span></h3>
+                <pre><code>// Bật auto-update cho extension cụ thể
+add_filter('jankx/extension/auto_update', function($enabled, $extension) {
+    if ($extension === 'my-premium-ext') {
+        return true;
+    }
+    return $enabled;
+}, 10, 2);</code></pre>
+
+                <h2>Các Nguyên Tắc Tốt</h2>
+                <ol>
+                    <li><strong>Namespace Đúng Cách</strong> - Dùng <code>Jankx\Extensions\MyExtension</code></li>
+                    <li><strong>Dùng Dependency Injection</strong> - Tận dụng Application container</li>
+                    <li><strong>Xử Lý Phụ Thuộc</strong> - Kiểm tra các extensions yêu cầu</li>
+                    <li><strong>Quản Lý Version</strong> - Chạy migrations khi đổi version</li>
+                    <li><strong>Xử Lý Lỗi</strong> - Dùng try-catch và Log facade</li>
+                </ol>
+
+                <hr>
+                <p style="text-align: center; color: var(--text-muted);">
+                    <a href="../">← Quay Lại Tài Liệu</a>
+                </p>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
