@@ -21,7 +21,7 @@ composer require jankx/theme
 
 ### Method 2: Manual Installation
 
-1. Download the latest release from [GitHub Releases](https://github.com/jankx/theme/releases)
+1. Download the latest release from [GitHub Releases](https://github.com/jankx/jankx-lite/releases)
 2. Extract to `/wp-content/themes/jankx/`
 3. Activate in WordPress Admin → Appearance → Themes
 
@@ -29,7 +29,7 @@ composer require jankx/theme
 
 ```bash
 cd /wp-content/themes/
-git clone https://github.com/jankx/theme.git jankx
+git clone https://github.com/jankx/jankx-lite.git jankx
 ```
 
 ---
@@ -148,5 +148,5 @@ chmod -R 755 wp-content/themes/jankx/cache/
 ## Support
 
 - 📖 [Documentation](../)
-- 🐛 [Issue Tracker](https://github.com/jankx/theme/issues)
-- 💬 [Discussions](https://github.com/jankx/theme/discussions)
+- 🐛 [Issue Tracker](https://github.com/jankx/jankx-lite/issues)
+- 💬 [Discussions](https://github.com/jankx/jankx-lite/discussions)

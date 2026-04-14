@@ -41,7 +41,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/jankx/theme.git
+git clone https://github.com/jankx/jankx-lite.git
 
 # Install dependencies
 composer install

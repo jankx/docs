@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extension System - Jankx Theme Documentation</title>
+    <title>Why Jankx? - Jankx Theme Documentation</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -277,6 +277,19 @@
             color: #a78bfa;
         }
 
+        .highlight-box {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+
         @media (max-width: 900px) {
             .main-layout { grid-template-columns: 1fr; }
             .sidebar { display: none; }
@@ -302,8 +315,8 @@
                 </a>
                 <nav>
                     <a href="./" class="active">Docs</a>
-                    <a href="https://github.com/jankx/jankx-lite" target="_blank">GitHub</a>
-                    <a href="../../vi/extensions/" class="lang-switch">🇻🇳 VI</a>
+                    <a href="https://github.com/jankx/theme" target="_blank">GitHub</a>
+                    <a href="../../vi/why-jankx/" class="lang-switch">🇻🇳 VI</a>
                 </nav>
             </div>
         </div>
@@ -313,13 +326,12 @@
         <div class="main-layout">
             <aside class="sidebar">
                 <div class="sidebar-section">
-                    <p class="sidebar-title">Extensions</p>
+                    <p class="sidebar-title">Why Jankx?</p>
                     <ul class="sidebar-links">
-                        <li><a href="#overview">Overview</a></li>
-                        <li><a href="#manager">Extension Manager</a></li>
-                        <li><a href="#creating">Creating Extensions</a></li>
-                        <li><a href="#manifest">Manifest</a></li>
-                        <li><a href="#lifecycle">Lifecycle</a></li>
+                        <li><a href="#problem">The Problem</a></li>
+                        <li><a href="#features">8 Unique Features</a></li>
+                        <li><a href="#comparison">Comparison</a></li>
+                        <li><a href="#usecases">Use Cases</a></li>
                     </ul>
                 </div>
                 <div class="sidebar-section">
@@ -327,227 +339,97 @@
                     <ul class="sidebar-links">
                         <li><a href="../">← Back to Docs</a></li>
                         <li><a href="../getting-started/">Getting Started</a></li>
-                        <li><a href="../layout-system/">Layout System</a></li>
-                        <li><a href="../admin/">Admin System</a></li>
-                        <li><a href="../testing/">Testing</a></li>
+                        <li><a href="../contributing/">Contributing</a></li>
                     </ul>
                 </div>
             </aside>
 
             <main class="content">
-                <h1>Extension System</h1>
-                <p>Jankx Theme's Extension System allows you to modularize functionality and load features dynamically.</p>
+                <h1>Why Jankx?</h1>
+                
+                <div class="highlight-box">
+                    <p><strong>Jankx is not just a WordPress theme. It's a modern theme framework that brings Laravel-style architecture, Drupal-style content management, and React-style component thinking to WordPress.</strong></p>
+                </div>
 
-                <h2 id="overview">Overview</h2>
-                <pre><code>┌─────────────────────────────────────────┐
-│         ExtensionManager                │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐  │
-│  │ Plugin  │ │ Theme   │ │ Custom  │  │
-│  │ Ext A   │ │ Ext B   │ │ Ext C   │  │
-│  └────┬────┘ └────┬────┘ └────┬────┘  │
-│       └────────────┴────────────┘       │
-│              Manifest                    │
-└─────────────────────────────────────────┘</code></pre>
+                <h2 id="problem">The Problem with Traditional Themes</h2>
+                <p>Most WordPress themes fall into one of these categories:</p>
+                <ul>
+                    <li><strong>Page Builder themes</strong> (Divi, Elementor): Great for non-devs, terrible for developers. Bloated, slow, vendor lock-in.</li>
+                    <li><strong>Starter themes</strong> (_s, Sage): Clean code, but you rebuild the same features repeatedly.</li>
+                    <li><strong>Framework themes</strong> (Genesis): Powerful, but dated architecture, no Gutenberg integration.</li>
+                </ul>
+                <p><strong>Jankx solves all of these.</strong></p>
 
-                <h3>ExtensionManager</h3>
-                <p>The central hub for managing all extensions:</p>
+                <h2 id="features">8 Unique Features</h2>
 
-                <pre><code>use Jankx\Extensions\ExtensionManager;
+                <h3>1. Layout Registry System</h3>
+                <p>A dynamic layout management system with Dependency Injection support. Switch between Grid, List, Carousel, Masonry layouts <strong>without changing template files</strong>.</p>
+                <pre><code>$registry->register('masonry', MasonryLayout::class);
+$layout = $registry->resolve('grid', ['columns' => 3]);
+echo $layout->render($query);</code></pre>
 
-// Get singleton instance
-$manager = ExtensionManager::getInstance();
+                <h3>2. Extension System with Manifests</h3>
+                <p>A full plugin-like extension system built into the theme. Extensions have lifecycle hooks, dependencies, and auto-activation.</p>
 
-// Check if extension is active
-if ($manager->is_extension_active('my-extension')) {
-    // Extension is active
-}
+                <h3>3. Laravel-Style DI Container</h3>
+                <p>A full Dependency Injection Container with Service Providers, Singletons, and Auto-resolution. Write clean, testable, loosely-coupled code.</p>
+                <pre><code>$app->singleton(ViewService::class);
+$layout = $app->make(GridLayout::class); // Auto inject</code></pre>
 
-// Get all extensions
-$extensions = $manager->get_extensions();</code></pre>
+                <h3>4. Deep Gutenberg Integration</h3>
+                <p>Custom blocks: Swiper, Modal, SmartSearch, IconPicker, Typography, AdvancedFilters. Plus <strong>Block Extras</strong> - responsive visibility, child order controls.</p>
 
-                <h2 id="manager">Extension Manager API</h2>
+                <h3>5. JSON-Based Content Layout Patterns</h3>
+                <p>Define complex layout patterns using JSON arrays instead of PHP templates. Non-developers can modify layouts. Version-control friendly.</p>
 
-                <pre><code>// Activation
-$manager->activate_extension('my-extension');
-$manager->deactivate_extension('my-extension');
+                <h3>6. Mobile Detection <span class="badge badge-pro">PRO</span></h3>
+                <p>Server-side mobile detection that changes layout behavior, not just CSS. Load different content for mobile vs desktop.</p>
 
-// Installation
-$manager->install_extension('my-extension');
-$manager->uninstall_extension('my-extension');
+                <h3>7. Font & Icon Management <span class="badge badge-pro">PRO</span></h3>
+                <p>Centralized font and icon management with visual pickers. Automatic Google Fonts loading, FontAwesome, Dashicons, Custom icons.</p>
 
-// Requirements
-$manager->require_extension('required-ext', true);   // Required
-$manager->require_extension('optional-ext', false);  // Recommended
+                <h3>8. AssetResolver with Anti-CLS</h3>
+                <p>Smart CSS/JS management with Critical CSS injection and priority loading. Eliminate Cumulative Layout Shift, improve Core Web Vitals.</p>
 
-// Queries
-$manager->is_extension_active('my-extension');
-$manager->is_extension_required('my-extension');
-$manager->is_extension_installed('my-extension');</code></pre>
-
-                <h2 id="creating">Creating Extensions</h2>
-
-                <h3>Step 1: Create Extension Class</h3>
-                <pre><code>&lt;?php
-namespace Jankx\Extensions\MyExtension;
-
-use Jankx\Extensions\AbstractExtension;
-
-class MyExtension extends AbstractExtension
-{
-    protected $id = 'my-extension';
-    protected $name = 'My Extension';
-    protected $version = '1.0.0';
-    protected $author = 'Your Name';
-    protected $description = 'Extension description';
-    
-    public function activate(): void
-    {
-        parent::activate();
-        
-        // Activation logic
-        $this->register_post_types();
-        $this->register_taxonomies();
-    }
-    
-    public function deactivate(): void
-    {
-        // Cleanup logic
-        parent::deactivate();
-    }
-    
-    public function boot(): void
-    {
-        // Run after all extensions loaded
-        add_action('init', [$this, 'init']);
-    }
-}</code></pre>
-
-                <h3>Step 2: Create Manifest</h3>
-                <pre><code>{
-    "name": "My Extension",
-    "id": "my-extension",
-    "version": "1.0.0",
-    "author": "Your Name",
-    "description": "Extension description",
-    "main": "MyExtension.php",
-    "class": "Jankx\\Extensions\\MyExtension\\MyExtension",
-    "requires": {
-        "php": ">=7.4",
-        "wordpress": ">=5.8",
-        "jankx": ">=2.0"
-    },
-    "dependencies": [
-        "other-extension"
-    ]
-}</code></pre>
-
-                <h3>Step 3: Register Extension</h3>
-                <pre><code>use Jankx\Extensions\ExtensionManager;
-use Jankx\Extensions\MyExtension\MyExtension;
-
-add_action('jankx/extensions/init', function(ExtensionManager $manager) {
-    $manager->add_extension('my-extension', new MyExtension());
-});</code></pre>
-
-                <h2 id="manifest">Extension Manifest</h2>
-
+                <h2 id="comparison">Feature Comparison</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>Field</th>
-                            <th>Type</th>
-                            <th>Description</th>
+                            <th>Feature</th>
+                            <th>Jankx</th>
+                            <th>Genesis</th>
+                            <th>Sage</th>
+                            <th>Astra</th>
+                            <th>Divi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>name</code></td><td>string</td><td>Extension display name</td></tr>
-                        <tr><td><code>id</code></td><td>string</td><td>Unique identifier</td></tr>
-                        <tr><td><code>version</code></td><td>string</td><td>Semantic version</td></tr>
-                        <tr><td><code>author</code></td><td>string</td><td>Author name</td></tr>
-                        <tr><td><code>description</code></td><td>string</td><td>Extension description</td></tr>
-                        <tr><td><code>main</code></td><td>string</td><td>Entry point file</td></tr>
-                        <tr><td><code>class</code></td><td>string</td><td>Fully-qualified class name</td></tr>
-                        <tr><td><code>requires</code></td><td>object</td><td>Requirements (php, wordpress, jankx)</td></tr>
-                        <tr><td><code>dependencies</code></td><td>array</td><td>Other required extensions</td></tr>
+                        <tr><td>DI Container</td><td>✅ Full</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+                        <tr><td>Layout Registry</td><td>✅ Dynamic</td><td>❌</td><td>❌</td><td>⚠️ Basic</td><td>❌</td></tr>
+                        <tr><td>Extension System</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+                        <tr><td>Block Extras</td><td>✅ Unique</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+                        <tr><td>Mobile Detection</td><td>✅ Server</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+                        <tr><td>Testing Support</td><td>✅ 266+ tests</td><td>❌</td><td>⚠️</td><td>❌</td><td>❌</td></tr>
                     </tbody>
                 </table>
 
-                <h2 id="lifecycle">Lifecycle Hooks</h2>
+                <h2 id="usecases">Real-World Use Cases</h2>
+                <ul>
+                    <li><strong>News/Magazine:</strong> Multiple content types with different layouts (news grid, video carousel, list view)</li>
+                    <li><strong>E-commerce:</strong> Advanced product filtering with faceted search using AdvancedFilters block</li>
+                    <li><strong>SaaS/Product:</strong> Landing pages with modals, animations, icons</li>
+                    <li><strong>Multi-site:</strong> Shared features across 50+ sites with per-site customization</li>
+                </ul>
 
-                <pre><code>class MyExtension extends AbstractExtension
-{
-    // Called on installation
-    public function install(): bool
-    {
-        // Create tables, options, etc.
-        return true;
-    }
-    
-    // Called on activation
-    public function activate(): void
-    {
-        // Register hooks, flush rewrite rules
-    }
-    
-    // Called after all extensions loaded
-    public function boot(): void
-    {
-        // Initialize services
-    }
-    
-    // Called on WordPress init
-    public function init(): void
-    {
-        // Register shortcodes, widgets
-    }
-    
-    // Called on deactivation
-    public function deactivate(): void
-    {
-        // Cleanup, flush cache
-    }
-    
-    // Called on uninstall
-    public function uninstall(): bool
-    {
-        // Remove tables, options
-        return true;
-    }
-}</code></pre>
-
-                <h2>Pro Features</h2>
-
-                <h3>License Management <span class="badge badge-pro">PRO</span></h3>
-                <pre><code>use Jankx\Facades\License;
-
-// Check license
-if (License::is_valid()) {
-    // License is valid
-}
-
-// Activate license
-License::activate('your-license-key');
-
-// Get license info
-$info = License::get_info();</code></pre>
-
-                <h3>Auto-Updates <span class="badge badge-pro">PRO</span></h3>
-                <pre><code>// Enable auto-update for specific extension
-add_filter('jankx/extension/auto_update', function($enabled, $extension) {
-    if ($extension === 'my-premium-ext') {
-        return true;
-    }
-    return $enabled;
-}, 10, 2);</code></pre>
-
-                <h2>Best Practices</h2>
-                <ol>
-                    <li><strong>Namespace Properly</strong> - Use <code>Jankx\Extensions\MyExtension</code></li>
-                    <li><strong>Use Dependency Injection</strong> - Leverage the Application container</li>
-                    <li><strong>Handle Dependencies</strong> - Check for required extensions</li>
-                    <li><strong>Version Management</strong> - Run migrations on version changes</li>
-                    <li><strong>Error Handling</strong> - Use try-catch and Log facade</li>
-                </ol>
+                <h2>Who Should Use Jankx?</h2>
+                <p><strong>✅ Perfect for:</strong></p>
+                <ul>
+                    <li>Developers building custom sites</li>
+                    <li>Agencies with multiple projects</li>
+                    <li>Teams needing maintainable code</li>
+                    <li>Performance-focused projects</li>
+                </ul>
+                <p><strong>❌ Not for:</strong> Non-technical users wanting drag-drop, simple brochure sites</p>
 
                 <hr>
                 <p style="text-align: center; color: var(--text-muted);">

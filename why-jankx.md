@@ -368,12 +368,12 @@ $registry->resolve('list', ['style' => 'compact'])->render($breaking_query);
 composer require jankx/theme
 
 # Or clone for development
-git clone https://github.com/jankx/theme.git
+git clone https://github.com/jankx/jankx-lite.git
 ```
 
 **Documentation:** https://jankx.github.io/docs/
 
-**GitHub:** https://github.com/jankx/theme
+**GitHub:** https://github.com/jankx/jankx-lite
 
 **Pro Version:** Contact for licensing
 

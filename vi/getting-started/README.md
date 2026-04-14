@@ -21,7 +21,7 @@ composer require jankx/theme
 
 ### Cách 2: Cài Đặt Thủ Công
 
-1. Tải bản release mới nhất từ [GitHub Releases](https://github.com/jankx/theme/releases)
+1. Tải bản release mới nhất từ [GitHub Releases](https://github.com/jankx/jankx-lite/releases)
 2. Giải nén vào `/wp-content/themes/jankx/`
 3. Kích hoạt trong WordPress Admin → Giao Diện → Themes
 
@@ -29,7 +29,7 @@ composer require jankx/theme
 
 ```bash
 cd /wp-content/themes/
-git clone https://github.com/jankx/theme.git jankx
+git clone https://github.com/jankx/jankx-lite.git jankx
 ```
 
 ---
@@ -148,5 +148,5 @@ chmod -R 755 wp-content/themes/jankx/cache/
 ## Hỗ Trợ
 
 - 📖 [Tài Liệu](../)
-- 🐛 [Issue Tracker](https://github.com/jankx/theme/issues)
-- 💬 [Discussions](https://github.com/jankx/theme/discussions)
+- 🐛 [Issue Tracker](https://github.com/jankx/jankx-lite/issues)
+- 💬 [Discussions](https://github.com/jankx/jankx-lite/discussions)

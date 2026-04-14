@@ -236,8 +236,8 @@ class MyExtension extends AbstractExtension
 
 ## Câu Hỏi?
 
-- GitHub Discussions: https://github.com/jankx/theme/discussions
-- Issues: https://github.com/jankx/theme/issues
+- GitHub Discussions: https://github.com/jankx/jankx-lite/discussions
+- Issues: https://github.com/jankx/jankx-lite/issues
 
 ## License
 
