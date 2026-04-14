@@ -1,16 +1,16 @@
 # Why Jankx? What Makes It Different
 
-> **Jankx is not just a WordPress theme. It's a modern theme framework that brings Laravel-style architecture, Drupal-style content management, and React-style component thinking to WordPress.**
+> **Jankx is a modern WordPress theme framework that brings Laravel-style architecture to developers today, with a vision of becoming friendly to end users tomorrow.**
 
-## The Problem with Traditional WordPress Themes
+## Different Approaches, Different Strengths
 
-Most WordPress themes fall into one of these categories:
+WordPress themes serve different needs. Each approach has its place:
 
-- **Page Builder themes** (Divi, Elementor): Great for non-devs, terrible for developers. Bloated, slow, vendor lock-in.
-- **Starter themes** (_s, Sage): Clean code, but you rebuild the same features repeatedly.
-- **Framework themes** (Genesis): Powerful, but dated architecture, no Gutenberg integration.
+- **Page Builder themes** (Divi, Elementor): Excellent for visual building, drag-and-drop convenience. Best for users who prefer GUI over code.
+- **Starter themes** (_s, Sage): Clean foundations for custom development. Great starting points that require building features from scratch.
+- **Framework themes** (Genesis): Proven architecture with extensive hooks. Established patterns that prioritize stability.
 
-**Jankx solves all of these.**
+**Jankx takes a different path** - bringing modern PHP practices (DI containers, modular architecture) into WordPress theme development, with deep Gutenberg integration.
 
 ---
 
@@ -35,11 +35,11 @@ $layout = $registry->resolve('grid', [
 echo $layout->render($query);
 ```
 
-**The competition:**
-- Genesis: Hardcoded loops in template files
-- Sage: Blade templates, no dynamic layout switching
-- Astra: Only basic grid options via Customizer
-- Divi: Shortcode-based, database-bloated
+**Other approaches:**
+- Genesis: Template-based layouts with hooks
+- Sage: Blade templating system
+- Astra: Customizer-based layout options
+- Divi: Visual builder with shortcode storage
 
 ---
 
@@ -74,10 +74,10 @@ class SeoExtension extends AbstractExtension {
 }
 ```
 
-**The competition:**
-- Genesis: No extension system
-- Sage: Composer packages, no lifecycle management
-- Divi: Third-party plugins only
+**Other approaches:**
+- Genesis: Child themes with functions.php hooks
+- Sage: Composer-based dependencies
+- Divi: Third-party plugin ecosystem
 
 ---
 
@@ -105,11 +105,10 @@ View::render('partials.card', $data);
 Config::get('app.debug');
 ```
 
-**The competition:**
-- _s: No container, procedural code
-- Genesis: Global functions everywhere
-- Sage: None
-- Astra: None
+**Other approaches:**
+- _s: Standard WordPress procedural patterns
+- Genesis: Global function-based architecture
+- Sage: Plain PHP without DI container
 
 ---
 
@@ -139,11 +138,11 @@ add_filter('jankx/gutenberg/extra/responsive-visibility', function($extras) {
 
 **Child Order control:** Reorder child blocks via UI without drag-drop.
 
-**The competition:**
-- Genesis: No Gutenberg integration
-- Sage: Basic block support
-- Astra: Only core blocks
-- Divi: Blocks are shortcodes in disguise
+**Other approaches:**
+- Genesis: Primarily classic editor focused
+- Sage: Basic Gutenberg support
+- Astra: Core Gutenberg blocks
+- Divi: Visual builder blocks
 
 ---
 
@@ -171,10 +170,10 @@ $layout = [
 
 **Visual result:** Card with image background, dark overlay, title and date on top.
 
-**The competition:**
+**Other approaches:**
 - Genesis: PHP template functions
 - Sage: Blade templates
-- Divi: Database-stored layouts (lock-in!)
+- Divi: Database-stored layouts
 
 ---
 
@@ -228,11 +227,11 @@ Icons::render('fontawesome', 'star', ['class' => 'text-gold']);
 - Admin UI for font selection
 - Icon picker in Gutenberg
 
-**The competition:**
-- Genesis: Manual enqueue
-- Sage: None
-- Astra: Basic font options
-- Divi: Has this, but bloated
+**Other approaches:**
+- Genesis: Manual enqueue functions
+- Sage: Standard WordPress enqueue
+- Astra: Customizer font options
+- Divi: Built-in font management
 
 ---
 
@@ -259,24 +258,20 @@ $assetResolver->addStyle('swiper', $url, ['async' => true]);
 
 ---
 
-## Feature Comparison Matrix
+## What Jankx Brings to the Table
 
-| Feature | Jankx | Genesis | Sage | Astra | Divi |
-|---------|-------|---------|------|-------|------|
-| **DI Container** | ✅ Full | ❌ None | ❌ None | ❌ None | ❌ None |
-| **Service Providers** | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Facades** | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Layout Registry** | ✅ Dynamic | ❌ Hardcoded | ❌ Static | ⚠️ Basic | ❌ Shortcodes |
-| **Extension System** | ✅ w/ Manifest | ❌ | ❌ Composer only | ❌ | ❌ |
-| **Gutenberg Blocks** | ✅ 15+ custom | ❌ | ⚠️ Basic | ❌ | ⚠️ Shortcodes |
-| **Block Extras** | ✅ Unique | ❌ | ❌ | ❌ | ❌ |
-| **Mobile Detection** | ✅ Server-side | ❌ | ❌ | ❌ | ❌ |
-| **Font Manager** | ✅ Pro | ❌ | ❌ | ⚠️ Basic | ✅ |
-| **Icon Manager** | ✅ Pro | ❌ | ❌ | ❌ | ✅ |
-| **Critical CSS** | ✅ Built-in | ❌ | ❌ | ❌ | ❌ |
-| **JSON Layouts** | ✅ Native | ❌ | ❌ | ❌ | ❌ Database |
-| **Child Theme Overrides** | ✅ Extensions | ⚠️ Functions | ✅ Templates | ⚠️ Hooks | ❌ |
-| **Testing Support** | ✅ PHPUnit | ❌ | ⚠️ | ❌ | ❌ |
+Here's how Jankx approaches common development needs:
+
+| Approach | Jankx | Other Themes |
+|----------|-------|--------------|
+| **Architecture** | DI Container + Service Providers (Laravel-inspired) | Hooks/filters (Genesis), Plain PHP (_s), Blade (Sage) |
+| **Layouts** | Registry pattern - switch layouts dynamically via code | Template files, Customizer options, or builder interface |
+| **Extensibility** | Built-in Extension system with lifecycle management | Child themes, plugins, or composer packages |
+| **Gutenberg** | Custom blocks + Block Extras (responsive visibility, etc.) | Core blocks or third-party page builders |
+| **Mobile** | Server-side detection + responsive CSS | CSS media queries primarily |
+| **Testing** | 266+ PHPUnit tests included | Testing setup left to developer |
+
+*Each tool has its strengths. Jankx is designed for developers who prefer framework-style architecture and want modern PHP patterns in their WordPress themes.*
 
 ---
 
@@ -347,17 +342,14 @@ $registry->resolve('list', ['style' => 'compact'])->render($breaking_query);
 
 ## Who Should Use Jankx?
 
-**✅ Perfect for:**
+**Currently best for:**
 - Developers building custom sites
 - Agencies with multiple projects
 - Teams needing maintainable code
 - Performance-focused projects
 - Headless/decoupled WordPress setups
 
-**❌ Not for:**
-- Non-technical users wanting drag-drop
-- Simple brochure sites
-- Teams committed to page builders
+**Our Vision:** While Jankx currently requires code knowledge, our ultimate goal is to become friendly to end users too - bringing the power of modern framework architecture into an interface anyone can use.
 
 ---
 
@@ -381,15 +373,9 @@ git clone https://github.com/jankx/jankx-lite.git
 
 ## The Bottom Line
 
-If you're tired of:
-- ❌ Bloated page builders
-- ❌ Dated framework architecture  
-- ❌ Rebuilding the same features
-- ❌ Unmaintainable child theme functions.php
+Jankx offers a fresh approach to WordPress theme development - combining modern PHP architecture with deep WordPress integration.
 
-**Jankx is for you.**
-
-It's the modern WordPress framework developers have been waiting for.
+Whether you're building a complex custom site or looking for a framework that grows with your team, Jankx provides the foundation.
 
 ---
 
