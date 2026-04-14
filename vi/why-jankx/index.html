@@ -351,14 +351,14 @@
                     <p><strong>Jankx không chỉ là một WordPress theme. Đó là một theme framework hiện đại mang kiến trúc Laravel-style, quản lý nội dung Drupal-style, và tư duy component React-style vào WordPress.</strong></p>
                 </div>
 
-                <h2 id="van-de">Vấn Đề với Theme Truyền Thống</h2>
-                <p>Hầu hết WordPress themes rơi vào một trong các loại:</p>
+                <h2 id="van-de">Mỗi Cách Tiếp Cận, Mỗi Thế Mạnh</h2>
+                <p>Các WordPress theme phục vụ nhu cầu khác nhau. Mỗi loại đều có vị trí của mình:</p>
                 <ul>
-                    <li><strong>Page Builder themes</strong> (Divi, Elementor): Tốt cho non-devs, tệ cho developers. Nặng, chậm, vendor lock-in.</li>
-                    <li><strong>Starter themes</strong> (_s, Sage): Code sạch, nhưng xây dực lại tính năng giống nhau liên tục.</li>
-                    <li><strong>Framework themes</strong> (Genesis): Mạnh, nhưng kiến trúc cũ, không tích hợp Gutenberg.</li>
+                    <li><strong>Page Builder themes</strong> (Divi, Elementor): Tuyệt vời cho xây dựng trực quan, kéo thả tiện lợi. Phù hợp người dùng thích GUI hơn code.</li>
+                    <li><strong>Starter themes</strong> (_s, Sage): Nền tảng sạch để phát triển tùy chỉnh. Điểm khởi đầu tốt, cần xây dựng tính năng từ đầu.</li>
+                    <li><strong>Framework themes</strong> (Genesis): Kiến trúc đã được chứng minh với nhiều hooks. Pattern ổn định, ưu tiên sự tin cậy.</li>
                 </ul>
-                <p><strong>Jankx giải quyết tất cả những vấn đề này.</strong></p>
+                <p><strong>Jankx đi theo hướng khác</strong> - mang các thực hành PHP hiện đại (DI containers, kiến trúc modular) vào phát triển theme WordPress, với tích hợp Gutenberg sâu.</p>
 
                 <h2 id="tinh-nang">8 Tính Năng Độc Đáo</h2>
 
@@ -391,27 +391,26 @@ $layout = $app->make(GridLayout::class); // Auto inject</code></pre>
                 <h3>8. AssetResolver chống CLS</h3>
                 <p>Quản lý CSS/JS thông minh với Critical CSS injection và priority loading. Loại bỏ Cumulative Layout Shift, cải thiện Core Web Vitals.</p>
 
-                <h2 id="so-sanh">Bảng So Sánh Tính Năng</h2>
+                <h2 id="so-sanh">Jankx Mang Gì Đến Bàn</h2>
+                <p>Cách Jankx tiếp cận các nhu cầu phát triển phổ biến:</p>
                 <table>
                     <thead>
                         <tr>
-                            <th>Tính Năng</th>
+                            <th>Cách Tiếp Cận</th>
                             <th>Jankx</th>
-                            <th>Genesis</th>
-                            <th>Sage</th>
-                            <th>Astra</th>
-                            <th>Divi</th>
+                            <th>Các Theme Khác</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>DI Container</td><td>✅ Full</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
-                        <tr><td>Layout Registry</td><td>✅ Dynamic</td><td>❌</td><td>❌</td><td>⚠️ Cơ bản</td><td>❌</td></tr>
-                        <tr><td>Extension System</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
-                        <tr><td>Block Extras</td><td>✅ Độc nhất</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
-                        <tr><td>Mobile Detection</td><td>✅ Server</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
-                        <tr><td>Testing Support</td><td>✅ 266+ tests</td><td>❌</td><td>⚠️</td><td>❌</td><td>❌</td></tr>
+                        <tr><td><strong>Kiến trúc</strong></td><td>DI Container + Service Providers (Laravel-style)</td><td>Hooks/filters (Genesis), Plain PHP (_s), Blade (Sage)</td></tr>
+                        <tr><td><strong>Layouts</strong></td><td>Registry pattern - chuyển đổi layout qua code</td><td>Template files, Customizer options, hoặc builder interface</td></tr>
+                        <tr><td><strong>Mở rộng</strong></td><td>Extension system tích hợp với lifecycle management</td><td>Child themes, plugins, hoặc composer packages</td></tr>
+                        <tr><td><strong>Gutenberg</strong></td><td>Custom blocks + Block Extras (responsive visibility, v.v.)</td><td>Core blocks hoặc page builders bên thứ ba</td></tr>
+                        <tr><td><strong>Mobile</strong></td><td>Server-side detection + responsive CSS</td><td>Chủ yếu CSS media queries</td></tr>
+                        <tr><td><strong>Testing</strong></td><td>266+ PHPUnit tests có sẵn</td><td>Testing setup do developer tự thiết lập</td></tr>
                     </tbody>
                 </table>
+                <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.875rem;"><em>Mỗi công cụ đều có thế mạnh riêng. Jankx được thiết kế cho developers thích kiến trúc framework-style và muốn các pattern PHP hiện đại trong theme WordPress của họ.</em></p>
 
                 <h2 id="usecases">Use Cases Thực Tế</h2>
                 <ul>

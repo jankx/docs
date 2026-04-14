@@ -351,14 +351,14 @@
                     <p><strong>Jankx is not just a WordPress theme. It's a modern theme framework that brings Laravel-style architecture, Drupal-style content management, and React-style component thinking to WordPress.</strong></p>
                 </div>
 
-                <h2 id="problem">The Problem with Traditional Themes</h2>
-                <p>Most WordPress themes fall into one of these categories:</p>
+                <h2 id="problem">Different Approaches, Different Strengths</h2>
+                <p>WordPress themes serve different needs. Each approach has its place:</p>
                 <ul>
-                    <li><strong>Page Builder themes</strong> (Divi, Elementor): Great for non-devs, terrible for developers. Bloated, slow, vendor lock-in.</li>
-                    <li><strong>Starter themes</strong> (_s, Sage): Clean code, but you rebuild the same features repeatedly.</li>
-                    <li><strong>Framework themes</strong> (Genesis): Powerful, but dated architecture, no Gutenberg integration.</li>
+                    <li><strong>Page Builder themes</strong> (Divi, Elementor): Excellent for visual building, drag-and-drop convenience. Best for users who prefer GUI over code.</li>
+                    <li><strong>Starter themes</strong> (_s, Sage): Clean foundations for custom development. Great starting points that require building features from scratch.</li>
+                    <li><strong>Framework themes</strong> (Genesis): Proven architecture with extensive hooks. Established patterns that prioritize stability.</li>
                 </ul>
-                <p><strong>Jankx solves all of these.</strong></p>
+                <p><strong>Jankx takes a different path</strong> - bringing modern PHP practices (DI containers, modular architecture) into WordPress theme development, with deep Gutenberg integration.</p>
 
                 <h2 id="features">8 Unique Features</h2>
 
@@ -391,27 +391,26 @@ $layout = $app->make(GridLayout::class); // Auto inject</code></pre>
                 <h3>8. AssetResolver with Anti-CLS</h3>
                 <p>Smart CSS/JS management with Critical CSS injection and priority loading. Eliminate Cumulative Layout Shift, improve Core Web Vitals.</p>
 
-                <h2 id="comparison">Feature Comparison</h2>
+                <h2 id="comparison">What Jankx Brings to the Table</h2>
+                <p>Here's how Jankx approaches common development needs:</p>
                 <table>
                     <thead>
                         <tr>
-                            <th>Feature</th>
+                            <th>Approach</th>
                             <th>Jankx</th>
-                            <th>Genesis</th>
-                            <th>Sage</th>
-                            <th>Astra</th>
-                            <th>Divi</th>
+                            <th>Others</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>DI Container</td><td>✅ Full</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
-                        <tr><td>Layout Registry</td><td>✅ Dynamic</td><td>❌</td><td>❌</td><td>⚠️ Basic</td><td>❌</td></tr>
-                        <tr><td>Extension System</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
-                        <tr><td>Block Extras</td><td>✅ Unique</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
-                        <tr><td>Mobile Detection</td><td>✅ Server</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
-                        <tr><td>Testing Support</td><td>✅ 266+ tests</td><td>❌</td><td>⚠️</td><td>❌</td><td>❌</td></tr>
+                        <tr><td><strong>Architecture</strong></td><td>DI Container + Service Providers (Laravel-inspired)</td><td>Hooks/filters (Genesis), Plain PHP (_s), Blade (Sage)</td></tr>
+                        <tr><td><strong>Layouts</strong></td><td>Registry pattern - switch layouts dynamically via code</td><td>Template files, Customizer options, or builder interface</td></tr>
+                        <tr><td><strong>Extensibility</strong></td><td>Built-in Extension system with lifecycle management</td><td>Child themes, plugins, or composer packages</td></tr>
+                        <tr><td><strong>Gutenberg</strong></td><td>Custom blocks + Block Extras (responsive visibility, etc.)</td><td>Core blocks or third-party page builders</td></tr>
+                        <tr><td><strong>Mobile</strong></td><td>Server-side detection + responsive CSS</td><td>CSS media queries primarily</td></tr>
+                        <tr><td><strong>Testing</strong></td><td>266+ PHPUnit tests included</td><td>Testing setup left to developer</td></tr>
                     </tbody>
                 </table>
+                <p style="margin-top: 16px; color: var(--text-muted); font-size: 0.875rem;"><em>Each tool has its strengths. Jankx is designed for developers who prefer framework-style architecture and want modern PHP patterns in their WordPress themes.</em></p>
 
                 <h2 id="usecases">Real-World Use Cases</h2>
                 <ul>
