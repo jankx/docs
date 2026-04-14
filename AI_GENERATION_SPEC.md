@@ -49,9 +49,33 @@ Always use Semantic HTML. Use classes defined in `CORE_LAYOUT` or `LAYOUT_TYPE` 
 3. **Lazy Loading**: If a component requires a library (like Swiper or Embla), only load it when the component is active.
 4. **Unique IDs**: Use `AssetResolver::generateUniqueId()` for elements needing specific scoping.
 
-## 4. Ground Truth Examples
+## 5. Block Logic Generation Rules
+
+When generating the PHP Block Class (`includes/framework/Gutenberg/Blocks/{Name}Block.php`):
+
+1. **Namespace**: Always use `namespace Jankx\Gutenberg\Blocks;`.
+2. **Inheritance**: Extend `Jankx\Gutenberg\Block`.
+3. **Property `$blockId`**: Must match the `name` in `block.json` (e.g., `jankx/my-block`).
+4. **Render Method**:
+    - Use `\extract()` for attributes.
+    - Call global WP functions with leading backslash `\`.
+    - Use `\Jankx\Facades\Asset::CORE_LAYOUT` and `LAYOUT_TYPE` for CSS injection.
+    - Logic for fetching data should ideally be moved to a Service or a Data Parser if complex.
+
+## 6. Vibe (TypeScript) to Jankx Mapping
+
+| Vibe Construct (TS) | Jankx Construct (PHP/WP) | Location |
+|---------------------|--------------------------|----------|
+| Component Props     | Block Attributes         | `block.json` -> `"attributes"` |
+| `useEffect` (Data)   | Service/Data Parser      | `includes/framework/Layouts/DynamicDataLayout/Parsers/` |
+| JSX Template        | Plates/PHP Template      | `includes/framework/Layouts/templates/post-layout/` |
+| Component Styles    | SCSS/Dynamic CSS         | `resources/blocks/{name}/style.scss` |
+| Component State     | Block Attributes/JS      | `resources/blocks/{name}/index.tsx` |
+
+## 7. Ground Truth Examples
 
 Refer to:
 - `Jankx\Services\AssetResolver` for CSS management logic.
 - `Jankx\Layouts\DynamicDataLayout\Parsers\CarouselLayoutDataParser` for level 2 CSS usage.
+- `Jankx\Gutenberg\Blocks\AuthorBoxBlock` for a complete block implementation.
 - `Jankx\Layouts\templates\post-layout\carousel.php` for clean template implementation.
