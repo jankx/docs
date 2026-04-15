@@ -371,6 +371,61 @@ return [
     ],
 ];</code></pre>
 
+                <h2>5. Guide: Creating a Custom Seeder</h2>
+                <p>To create a specific data generation pipeline, extend <code>AbstractSeeder</code> and implement the <code>run()</code> method. Review the example below:</p>
+                <pre><code>namespace App\Console\Seeders;
+
+use Jankx\Foundation\Cli\Seeders\AbstractSeeder;
+
+class MovieDemoSeeder extends AbstractSeeder
+{
+    // Alias used for running (e.g. wp jankx seed run movie)
+    public static function getName(): string { return 'movie'; }
+
+    public static function getDescription(): string { return 'Seeds movie demo data'; }
+
+    // Estimation for dry-runs
+    public function count(): int { return 5; }
+
+    public function run(array $options = []): void
+    {
+        // ensurePost makes item generation idempotent (no duplicates allowed)
+        $this->ensurePost([
+            'post_title' => 'The Matrix',
+            'post_content' => 'Movie description...',
+            'post_type' => 'post',
+            'post_status' => 'publish'
+        ]);
+        
+        $this->log('Successfully generated movies!');
+    }
+}</code></pre>
+                <p>Make sure to register your new Seeder in the <code>'seeders'</code> array located inside <code>config/cli.php</code> or hook it dynamically.</p>
+
+                <h2>6. Guide: Creating a Theme Demo Package</h2>
+                <p>To prepare a site template for others to import easily, follow these structural steps:</p>
+                <ol style="margin-left: 20px; color: var(--text-secondary); margin-bottom: 20px;">
+                    <li>On a configured WP install, export XML Content, Customizer config, and Widgets.</li>
+                    <li>Create a sub-folder under <code>demo/</code> inside your theme (e.g. <code>demo/my-store</code>).</li>
+                    <li>Copy/Paste your JSON and XML files directly into that directory.</li>
+                    <li>Modify the core <code>demo/manifest.json</code> to register the package.</li>
+                </ol>
+                <p><strong>Example <code>demo/manifest.json</code> properties:</strong></p>
+                <pre><code>{
+  "my-store": {
+    "name": "My Store Demo",
+    "description": "E-Commerce boilerplate showcase",
+    "version": "1.0.0",
+    "files": {
+      "content": "content.xml",           // Posts, Pages, Images
+      "widgets": "widgets.json",          // Sidebar & Layout mappings
+      "customizer": "customizer.json",    // Theme Mods config
+      "options": "options.json"           // Global Site Options
+    }
+  }
+}</code></pre>
+                <p>You can now immediately trigger <code>wp jankx demo import my-store</code> from your terminal.</p>
+
                 <hr>
                 <p style="text-align: center; color: var(--text-muted);">
                     Made with ❤️ by Jankx Team

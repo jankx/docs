@@ -370,6 +370,61 @@ return [
     ],
 ];</code></pre>
 
+                <h2>5. Hướng Dẫn: Tạo Một Seeder Tuỳ Chỉnh</h2>
+                <p>Để tạo một quy trình sinh dữ liệu riêng cho dự án, bạn tạo một class kế thừa từ <code>AbstractSeeder</code> và thực thi hàm <code>run()</code>. Hãy nhìn vào ví dụ dưới đây:</p>
+                <pre><code>namespace App\Console\Seeders;
+
+use Jankx\Foundation\Cli\Seeders\AbstractSeeder;
+
+class MovieDemoSeeder extends AbstractSeeder
+{
+    // Xác định tên alias hệ thống dùng để chạy (vd: wp jankx seed run movie)
+    public static function getName(): string { return 'movie'; }
+
+    public static function getDescription(): string { return 'Sinh dữ liệu Phim Demo'; }
+
+    // Số lượng bản ghi sẽ được tạo (Dùng cho --dry-run)
+    public function count(): int { return 5; }
+
+    public function run(array $options = []): void
+    {
+        // Sử dụng helper ensurePost để tránh bị trùng lặp dữ liệu khi chạy nhiều lần
+        $this->ensurePost([
+            'post_title' => 'The Matrix',
+            'post_content' => 'Nội dung bộ phim...',
+            'post_type' => 'post',
+            'post_status' => 'publish'
+        ]);
+        
+        $this->log('Đã tạo phim thành công!');
+    }
+}</code></pre>
+                <p>Để hệ thống nhận diện class này, hãy khai báo class vào thẻ <code>'seeders'</code> bên trong <code>config/cli.php</code>.</p>
+
+                <h2>6. Hướng Dẫn: Tạo Một Package Demo Mới</h2>
+                <p>Một tính năng tuyệt vời của Jankx là tự cấu hình Demo. Hãy làm theo các bước sau để publish demo mới:</p>
+                <ol style="margin-left: 20px; color: var(--text-secondary); margin-bottom: 20px;">
+                    <li>Vào Admin UI xuất toàn bộ Setting thành file `xml`, `widgets.json`, `customizer.json`...</li>
+                    <li>Tạo một thư mục mới trong <code>demo/</code> (Ví dụ: <code>demo/my-store</code>).</li>
+                    <li>Di chuyển các file JSON/XML bạn đã trích xuất vào thư mục đó.</li>
+                    <li>Cập nhật file <code>demo/manifest.json</code> để đăng ký package của bạn.</li>
+                </ol>
+                <p><strong>Ví dụ cấu trúc <code>demo/manifest.json</code>:</strong></p>
+                <pre><code>{
+  "my-store": {
+    "name": "My Store Demo",
+    "description": "Bản mẫu web bán hàng",
+    "version": "1.0.0",
+    "files": {
+      "content": "content.xml",           // Nội dung Posts, Pages, Images
+      "widgets": "widgets.json",          // Layout Sidebar
+      "customizer": "customizer.json",    // Cấu hình Theme Mods
+      "options": "options.json"           // Các Site Options cơ bản
+    }
+  }
+}</code></pre>
+                <p>Xong! Giờ đây bạn đã có thể gọi lệnh <code>wp jankx demo import my-store</code> để cài đặt tự động.</p>
+
                 <hr>
                 <p style="text-align: center; color: var(--text-muted);">
                     Made with ❤️ by Jankx Team
