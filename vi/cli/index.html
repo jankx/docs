@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jankx Theme Documentation - English</title>
+    <title>Jankx CLI - Tài Liệu Tiếng Việt</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -56,7 +55,6 @@
             padding: 0 24px;
         }
 
-        /* Header */
         header {
             padding: 24px 0;
             border-bottom: 1px solid var(--border);
@@ -97,15 +95,6 @@
             font-weight: 600;
         }
 
-        .version-badge {
-            padding: 4px 12px;
-            background: var(--primary-gradient);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        /* Nav */
         nav {
             display: flex;
             gap: 24px;
@@ -141,7 +130,6 @@
             color: var(--text-primary);
         }
 
-        /* Main Layout */
         .main-layout {
             display: grid;
             grid-template-columns: 260px 1fr;
@@ -149,7 +137,6 @@
             padding: 40px 0;
         }
 
-        /* Sidebar */
         .sidebar {
             position: sticky;
             top: 100px;
@@ -192,11 +179,6 @@
             color: var(--text-primary);
         }
 
-        /* Content */
-        .content {
-            max-width: none;
-        }
-
         .content h1 {
             font-size: 2.5rem;
             font-weight: 800;
@@ -216,14 +198,20 @@
         }
 
         .content h3 {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            margin: 24px 0 12px;
+            margin: 20px 0 12px;
         }
 
         .content p {
             color: var(--text-secondary);
             margin-bottom: 16px;
+        }
+
+        .content ul {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            padding-left: 20px;
         }
 
         .content pre {
@@ -241,18 +229,10 @@
             color: var(--text-primary);
         }
 
-        .content p code, .content li code {
-            background: rgba(102, 126, 234, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: var(--primary);
-        }
-
         .content table {
             width: 100%;
             border-collapse: collapse;
             margin: 24px 0;
-            font-size: 0.9375rem;
         }
 
         .content th, .content td {
@@ -267,102 +247,17 @@
             color: var(--text-muted);
             font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .content ul, .content ol {
-            margin: 16px 0;
-            padding-left: 24px;
-        }
-
-        .content li {
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .content a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .content a:hover {
-            text-decoration: underline;
-        }
-
-        .content blockquote {
-            border-left: 3px solid var(--primary);
-            padding-left: 20px;
-            margin: 24px 0;
-            color: var(--text-muted);
-        }
-
-        .content hr {
-            border: none;
-            border-top: 1px solid var(--border);
-            margin: 40px 0;
-        }
-
-        /* Cards */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin: 32px 0;
-        }
-
-        .card {
-            padding: 24px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            transition: all 0.2s;
-        }
-
-        .card:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .card h3 {
-            margin-top: 0;
-            font-size: 1.125rem;
-        }
-
-        .card p {
-            margin-bottom: 0;
-            font-size: 0.9375rem;
-        }
-
-        /* Responsive */
         @media (max-width: 900px) {
             .main-layout {
                 grid-template-columns: 1fr;
             }
-
-            .sidebar {
-                position: static;
-                display: none;
-            }
-
-            header {
-                position: static;
-                background: var(--bg-dark);
-            }
-
-            nav {
-                display: none;
-            }
+            .sidebar { display: none; }
         }
 
         @media (max-width: 600px) {
-            .content h1 {
-                font-size: 1.75rem;
-            }
-
-            .header-content {
-                flex-wrap: wrap;
-                gap: 16px;
-            }
+            .content h1 { font-size: 1.75rem; }
         }
     </style>
 </head>
@@ -373,14 +268,14 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <a href="../" class="logo">
+                <a href="../../" class="logo">
                     <span class="logo-icon">J</span>
                     <span class="logo-text">Jankx Theme</span>
                 </a>
                 <nav>
-                    <a href="./getting-started/" class="active">Docs</a>
+                    <a href="../getting-started/">Tài Liệu</a>
                     <a href="https://github.com/jankx/jankx-lite" target="_blank">GitHub</a>
-                    <a href="../vi/" class="lang-switch">🇻🇳 VI</a>
+                    <a href="../../en/cli/" class="lang-switch">🇺🇸 EN</a>
                 </nav>
             </div>
         </div>
@@ -390,101 +285,94 @@
         <div class="main-layout">
             <aside class="sidebar">
                 <div class="sidebar-section">
-                    <p class="sidebar-title">Getting Started</p>
+                    <p class="sidebar-title">Bắt Đầu</p>
                     <ul class="sidebar-links">
-                        <li><a href="./getting-started/" class="active">Quick Start</a></li>
-                        <li><a href="./getting-started/">Installation</a></li>
-                        <li><a href="./getting-started/">Configuration</a></li>
+                        <li><a href="../getting-started/">Bắt Đầu Nhanh</a></li>
+                        <li><a href="../getting-started/">Cài Đặt</a></li>
+                        <li><a href="../getting-started/">Cấu Hình</a></li>
                     </ul>
                 </div>
                 <div class="sidebar-section">
                     <p class="sidebar-title">Core</p>
                     <ul class="sidebar-links">
-                        <li><a href="./layout-system/">Layout System</a></li>
-                        <li><a href="./admin/">Admin Framework</a></li>
-                        <li><a href="./extensions/">Extensions</a></li>
-                        <li><a href="./cli/">Command Line (CLI)</a></li>
+                        <li><a href="../layout-system/">Hệ Thống Layout</a></li>
+                        <li><a href="../admin/">Hệ Thống Quản Trị</a></li>
+                        <li><a href="../extensions/">Extensions</a></li>
+                        <li><a href="../cli/" class="active">Giao Diện Dòng Lệnh (CLI)</a></li>
                     </ul>
                 </div>
                 <div class="sidebar-section">
-                    <p class="sidebar-title">Advanced</p>
+                    <p class="sidebar-title">Nâng Cao</p>
                     <ul class="sidebar-links">
-                        <li><a href="./testing/">Testing</a></li>
-                        <li><a href="#api">API Reference</a></li>
+                        <li><a href="../testing/">Kiểm Thử</a></li>
                     </ul>
                 </div>
             </aside>
 
-            <main class="content" id="content">
-                <h1>Jankx Theme Documentation</h1>
-                <p>Welcome to the Jankx Theme documentation. A modern WordPress theme framework with powerful features and flexible architecture.</p>
+            <main class="content">
+                <h1>Giao Diện Dòng Lệnh (CLI)</h1>
+                <p>Jankx cung cấp một hệ thống CLI mạnh mẽ và linh hoạt qua <strong>WP-CLI</strong> để quản lý dữ liệu demo, cache, configuration và theo dõi sức khỏe hệ thống.</p>
                 
-                <div class="cards-grid">
-                    <div class="card">
-                        <h3>🚀 Getting Started</h3>
-                        <p>Installation, setup, and quick start guide for new users.</p>
-                    </div>
-                    <div class="card">
-                        <h3>🏗️ Layout System</h3>
-                        <p>Dynamic layouts, block templates, and layout registry.</p>
-                    </div>
-                    <div class="card">
-                        <h3>🧩 Extensions</h3>
-                        <p>Extension system, manifest, and lifecycle management.</p>
-                    </div>
-                    <div class="card">
-                        <h3>⚙️ Admin System</h3>
-                        <p>Admin panels, form handlers, and theme options.</p>
-                    </div>
-                    <div class="card">
-                        <h3>🧪 Testing</h3>
-                        <p>Unit tests, integration tests, and code coverage.</p>
-                    </div>
-                    <div class="card">
-                        <h3>📚 API Reference</h3>
-                        <p>Complete API documentation for developers.</p>
-                    </div>
-                </div>
+                <h2>1. Quản Lý Hệ Thống (wp jankx system)</h2>
+                <p>Nhóm lệnh này dùng để kiểm tra cấu hình, bảo trì hệ thống và tối ưu hiệu suất chạy theme.</p>
+                
+                <h3>Trạng Thái Hệ Thống</h3>
+                <pre><code>wp jankx system status
+wp jankx system health</code></pre>
+                <p>Kiểm tra hệ thống xem PHP, WordPress đã đúng phiên bản tối thiểu chưa, memory limit có đạt mức tối ưu (dưới 80%), thư mục có được cấp quyền Ghi chưa và các components của framework có load đầy đủ hay không.</p>
 
-                <h2>Quick Start</h2>
-                <pre><code># Clone the repository
-git clone https://github.com/jankx/jankx-lite.git
+                <h3>Tối ưu & Bảo Trì</h3>
+                <pre><code>wp jankx system optimize
+wp jankx system maintenance --enable</code></pre>
+                <p>Lệnh <code>optimize</code> sẽ thực hiện flush rewrite rules, xóa hết object cache và purge transients quá hạn.<br> Lệnh <code>maintenance</code> dùng để bật chế độ bảo trì trực tiếp trên website nhanh chóng.</p>
 
-# Install dependencies
-composer install
-npm install
+                <h2>2. Seeder Framework (wp jankx seed)</h2>
+                <p>Mô đun giúp sinh hàng loạt dữ liệu mẫu (Seeder) dùng để phát triển theme mà không cần import những file XML cồng kềnh.</p>
+                
+                <h3>Lấy danh sách các bản mẫu sinh:</h3>
+                <pre><code>wp jankx seed list
+wp jankx seed list --group=ecommerce</code></pre>
 
-# Run tests
-./vendor/bin/phpunit
+                <h3>Quy trình Sinh dữ liệu mới:</h3>
+                <pre><code>wp jankx seed run gaming-portal
+wp jankx seed run --group=blog
+wp jankx seed run pet-shop --verbose</code></pre>
 
-# Build assets
-npm run build</code></pre>
+                <h3>Rollback dữ liệu:</h3>
+                <pre><code>wp jankx seed rollback gaming-portal</code></pre>
+                <p>Lệnh này sẽ tự động xóa sạch những bài viết (Posts) và thư mục (Terms / Categories) mà seeder đó vừa sinh ra vào hệ thống.</p>
 
-                <h2>Feature Availability</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Feature</th>
-                            <th>Lite</th>
-                            <th>Pro</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Core Framework</td><td>✅</td><td>✅</td></tr>
-                        <tr><td>Basic Layouts</td><td>✅</td><td>✅</td></tr>
-                        <tr><td>Gutenberg Blocks</td><td>5 blocks</td><td>40+ blocks</td></tr>
-                        <tr><td>Custom Fonts</td><td>—</td><td>✅</td></tr>
-                        <tr><td>Icon System</td><td>—</td><td>✅</td></tr>
-                        <tr><td>License System</td><td>—</td><td>✅</td></tr>
-                    </tbody>
-                </table>
+                <h2>3. Import Full Demo Packages (wp jankx demo)</h2>
+                <p>Để import toàn bộ Website (bao gồm Content, Widget, Customizer, Menu và Options), chức năng này tự động đọc folder theo dạng structure <code>demos/manifest.json</code>.</p>
+                
+                <h3>Danh sách các Demo có sẵn:</h3>
+                <pre><code>wp jankx demo list</code></pre>
+                
+                <h3>Thực hiện Import:</h3>
+                <pre><code>wp jankx demo import gaming-portal
+wp jankx demo import pet-shop --xml-only
+wp jankx demo import blog-magazine --skip-images</code></pre>
 
-                <h2>Contributing</h2>
-                <p>We welcome contributions! Please read our <a href="./contributing/">Contributing Guide</a> for details.</p>
+                <h3>Reset mặt bằng Website:</h3>
+                <pre><code>wp jankx demo reset
+wp jankx demo reset gaming-portal</code></pre>
+
+                <h2>4. Mở rộng (Cấu hình Custom Command & Seeder)</h2>
+                <p>Trong thư mục <code>config/cli.php</code>, có thể thiết lập thêm Custom commands và class mới:</p>
+                
+                <pre><code>// File: config/cli.php
+return [
+    'commands' => [
+        'jankx custom_cmd' => App\Console\Commands\MyCustomCommand::class,
+    ],
+    'seeders' => [
+        App\Console\Seeders\MovieDemoSeeder::class,
+    ],
+];</code></pre>
 
                 <hr>
                 <p style="text-align: center; color: var(--text-muted);">
-                    Made with ❤️ by the Jankx Team
+                    Made with ❤️ by Jankx Team
                 </p>
             </main>
         </div>
