@@ -334,7 +334,14 @@ wp jankx system maintenance --enable</code></pre>
 wp jankx seed list --group=ecommerce</code></pre>
 
                 <h3>Quy trình Sinh dữ liệu mới:</h3>
-                <pre><code>wp jankx seed run gaming-portal
+                <pre><code># Chạy bằng ID/Alias
+wp jankx seed run gaming-portal
+
+# Chạy bằng tên Class (Chuẩn Laravel)
+wp jankx seed run PetShopSeeder
+wp jankx seed run --class=BlogDemoSeeder
+
+# Chạy theo Group hoặc nhiều options
 wp jankx seed run --group=blog
 wp jankx seed run pet-shop --verbose</code></pre>
 

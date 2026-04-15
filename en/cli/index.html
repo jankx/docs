@@ -334,7 +334,14 @@ wp jankx system maintenance --enable</code></pre>
 wp jankx seed list --group=ecommerce</code></pre>
 
                 <h3>Execute a Seeder</h3>
-                <pre><code>wp jankx seed run gaming-portal
+                <pre><code># Run by ID/Alias
+wp jankx seed run gaming-portal
+
+# Run by Class Name (Laravel style)
+wp jankx seed run PetShopSeeder
+wp jankx seed run --class=BlogDemoSeeder
+
+# Run by Group or with Options
 wp jankx seed run --group=blog
 wp jankx seed run pet-shop --verbose</code></pre>
                 <p>Dry-run mode is also available via <code>wp jankx seed run --dry-run</code> to calculate the number of dummy items that will be generated without actually making alterations.</p>
