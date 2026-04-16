@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Options Integration - Jankx Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --border: rgba(255, 255, 255, 0.1);
+            --glow: rgba(102, 126, 234, 0.3);
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background:
+                radial-gradient(ellipse at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(240, 147, 251, 0.05) 0%, transparent 50%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-weight: 600;
+        }
+
+        .version-badge {
+            padding: 4px 12px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--primary);
+        }
+
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .lang-switch:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 32px;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .sidebar-links {
+            list-style: none;
+        }
+
+        .sidebar-links li {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-links a {
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar-links a:hover, .sidebar-links a.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .content {
+            max-width: none;
+        }
+
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 40px 0 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 24px 0 12px;
+        }
+
+        .content p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .content pre {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .content p code, .content li code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--primary);
+        }
+
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.9375rem;
+        }
+
+        .content th, .content td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content th {
+            background: rgba(255,255,255,0.02);
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content ul, .content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .content li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .content a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .content a:hover {
+            text-decoration: underline;
+        }
+
+        .content blockquote {
+            border-left: 3px solid var(--primary);
+            padding-left: 20px;
+            margin: 24px 0;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-pro {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            border: none;
+        }
+
+        .diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding-left: 28px;
+            position: relative;
+        }
+
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: var(--text-muted);
+        }
+
+        .checklist li.checked::before {
+            content: "☑";
+            color: var(--success);
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="./" class="logo">
+                    <span class="logo-icon">J</span>
+                    <span class="logo-text">Jankx Theme</span>
+                </a>
+                <nav>
+                    <a href="./">Documentation</a>
+                    <a href="https://github.com/jankx/jankx-lite" target="_blank">GitHub</a>
+                    <a href="./vi/theme-options-integration.html" class="lang-switch">🇻🇳 VI</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Getting Started</p>
+                    <ul class="sidebar-links">
+                        <li><a href="./">Introduction</a></li>
+                        <li><a href="./en/getting-started/">Quick Start</a></li>
+                        <li><a href="./en/getting-started/">Installation</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Core Features</p>
+                    <ul class="sidebar-links">
+                        <li><a href="./en/layout-system/">Layout System</a></li>
+                        <li><a href="./en/admin/">Admin Framework</a></li>
+                        <li><a href="./THEME_OPTIONS_INTEGRATION.html" class="active">Theme Options</a></li>
+                        <li><a href="./ICON_SYSTEM.html">Icon System</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Advanced</p>
+                    <ul class="sidebar-links">
+                        <li><a href="./en/extensions/">Extensions</a></li>
+                        <li><a href="./en/testing/">Testing</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="content">
+                <h1>🎨 Theme Options Integration</h1>
+                <p><span class="badge badge-pro">PRO</span></p>
+                <p>The Theme Options Integration System connects Theme Options, Gutenberg Blocks, and Global CSS into a unified, synchronized system.</p>
+
+                <h2>🎯 Problem Solved</h2>
+                <p><strong>Before:</strong> Theme Options, Gutenberg Blocks, and Global CSS operated independently.</p>
+                <ul>
+                    <li>User changes color in Theme Options → Blocks don't receive new color</li>
+                    <li>Container width in Theme Options different from theme.json layout</li>
+                    <li>Typography settings not applied to blocks</li>
+                </ul>
+
+                <p><strong>After:</strong> Fully synchronized system</p>
+                <ul>
+                    <li>Change in Theme Options → Automatic CSS and Block updates</li>
+                    <li>CSS Variables connect all components</li>
+                </ul>
+
+                <h2>🏗️ Architecture</h2>
+                <div class="diagram">                    THEME OPTIONS
+                       │
+                       ▼
+            ThemeOptionsCSSGenerator
+            (Generates CSS Variables)
+                       │
+          ┌──────────┴──────────┐
+          │                     │
+          ▼                     ▼
+     GLOBAL CSS           ThemeOptionsBridge
+     (Frontend)          • Pass data to JS
+     (Admin)             • Filter theme.json
+     (Block Editor)      • Body classes
+                          • Block defaults
+                                 │
+                                 ▼
+                        GUTENBERG BLOCKS
+                        • CSS Variables
+                        • window.jankxThemeOptions</div>
+
+                <h2>🎨 CSS Variables Generated</h2>
+                <pre><code>:root {
+  /* Colors */
+  --jankx-primary-color: #ff5722;
+  --jankx-secondary-color: #009688;
+  --jankx-primary-color-rgb: 255, 87, 34;
+  --jankx-secondary-color-rgb: 0, 150, 136;
+
+  /* Layout */
+  --jankx-container-width: 1200px;
+  --jankx-sidebar-position: right;
+
+  /* Typography */
+  --jankx-body-font-family: Inter;
+  --jankx-body-font-size: 16px;
+  --jankx-body-font-weight: 400;
+  --jankx-body-line-height: 1.6;
+}</code></pre>
+
+                <h2>💻 Developer Usage</h2>
+
+                <h3>PHP Templates</h3>
+                <pre><code>&lt;?php
+// Get theme option value
+$primaryColor = jankx_get_theme_option('primary_color', '#ff5722');
+
+// Get color in different formats
+$hex = jankx_get_theme_color('primary', 'hex');        // #ff5722
+$rgb = jankx_get_theme_color('primary', 'rgb');         // 255, 87, 34
+$css = jankx_get_theme_color('primary', 'css-var');    // var(--jankx-primary-color)
+
+// Get container width
+$width = jankx_get_container_width();                  // 1200px
+
+// Get typography
+$font = jankx_get_body_typography('font-family');      // Inter
+
+// Get CSS variable
+$var = jankx_get_css_var('primary-color');            // var(--jankx-primary-color)
+$value = jankx_get_css_var('primary-color', true);     // #ff5722
+?&gt;</code></pre>
+
+                <h3>JavaScript (Block Editor)</h3>
+                <pre><code>// Access theme options in block
+const themeOptions = window.jankxThemeOptions;
+
+// Data structure:
+{
+  version: '1.0.0',
+  colors: { primary: '#ff5722', secondary: '#009688' },
+  layout: { containerWidth: 1200, sidebarPosition: 'right' },
+  typography: { body: { 'font-family': 'Inter', ... } }
+}
+
+// Usage
+const primaryColor = themeOptions.colors?.primary || '#ff5722';</code></pre>
+
+                <h3>SCSS/CSS</h3>
+                <pre><code>.my-block {
+  background-color: var(--jankx-primary-color, #ff5722);
+  color: var(--jankx-secondary-color, #009688);
+  max-width: var(--jankx-container-width, 1200px);
+  font-family: var(--jankx-body-font-family, Inter);
+}
+
+// Use RGB for opacity
+.overlay {
+  background-color: rgba(var(--jankx-primary-color-rgb), 0.5);
+}</code></pre>
+
+                <h2>👤 End User Usage</h2>
+                <ol>
+                    <li>Go to <strong>Appearance → Theme Options</strong></li>
+                    <li>Change <strong>Primary Color</strong>, <strong>Container Width</strong>, or <strong>Typography</strong></li>
+                    <li>Click <strong>Save Changes</strong></li>
+                    <li>All blocks and site styles automatically update</li>
+                </ol>
+
+                <h2>🔧 Integrating New Blocks</h2>
+                <p>When creating a new block, follow this checklist:</p>
+                <ul class="checklist">
+                    <li>Add <code>jankx_get_theme_options_data()</code> to <code>enqueueEditorAssets()</code></li>
+                    <li>Use <code>jankx_get_theme_color()</code> in <code>render()</code> method</li>
+                    <li>Add CSS variables in <code>style.scss</code></li>
+                    <li class="checked">Test with theme option changes</li>
+                    <li class="checked">Check responsive behavior</li>
+                    <li class="checked">Verify in editor and frontend</li>
+                </ul>
+
+                <h2>🧪 Testing</h2>
+                <pre><code># Run test script via WP-CLI
+wp eval-file wp-content/themes/jankx/tests/theme-options-integration-test.php
+
+# Or check in browser console
+console.log(window.jankxThemeOptions);</code></pre>
+
+                <h2>🐛 Troubleshooting</h2>
+                <h3>CSS Not Updating</h3>
+                <p>Clear cache after theme options update:</p>
+                <pre><code>add_action('jankx/options/updated', function() {
+    do_action('jankx/theme-options-integration/clear-cache');
+});</code></pre>
+
+                <h3>Blocks Not Receiving Colors</h3>
+                <p>Ensure block passes theme options to JavaScript:</p>
+                <pre><code>wp_localize_script($handle, 'jankxThemeOptions',
+    jankx_get_theme_options_data()
+);</code></pre>
+
+                <hr>
+                <p style="text-align: center; color: var(--text-muted);">
+                    Made with ❤️ by the Jankx Team
+                </p>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
