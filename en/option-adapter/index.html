@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option Adapter - Jankx Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center; gap: 12px;
+            text-decoration: none; color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px; height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 18px;
+        }
+
+        .logo-text { font-weight: 600; }
+
+        nav { display: flex; gap: 24px; align-items: center; }
+        nav a {
+            color: var(--text-secondary); text-decoration: none;
+            font-size: 0.875rem; transition: color 0.2s;
+        }
+        nav a:hover { color: var(--primary); }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .sidebar { position: sticky; top: 100px; height: fit-content; }
+        .sidebar-section { margin-bottom: 32px; }
+        .sidebar-title {
+            font-size: 0.75rem; text-transform: uppercase;
+            letter-spacing: 1px; color: var(--text-muted);
+            margin-bottom: 12px; font-weight: 600;
+        }
+        .sidebar-links { list-style: none; }
+        .sidebar-links li { margin-bottom: 4px; }
+        .sidebar-links a {
+            display: block; padding: 8px 12px;
+            color: var(--text-secondary); text-decoration: none;
+            border-radius: 8px; font-size: 0.9375rem; transition: all 0.2s;
+        }
+        .sidebar-links a:hover, .sidebar-links a.active {
+            background: var(--bg-card); color: var(--text-primary);
+        }
+
+        .content { max-width: none; }
+        .content h1 {
+            font-size: 2.5rem; font-weight: 800; margin-bottom: 16px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .content h2 {
+            font-size: 1.5rem; font-weight: 600; margin: 40px 0 16px;
+            padding-bottom: 12px; border-bottom: 1px solid var(--border);
+        }
+        .content p { color: var(--text-secondary); margin-bottom: 16px; }
+        .content pre {
+            background: rgba(0,0,0,0.4); border: 1px solid var(--border);
+            border-radius: 12px; padding: 20px; margin: 20px 0; overflow-x: auto;
+        }
+        .content code {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../" class="logo">
+                    <span class="logo-icon">J</span>
+                    <span class="logo-text">Jankx Theme</span>
+                </a>
+                <nav><a href="../">← Back to Docs</a></nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Option Adapter</p>
+                    <ul class="sidebar-links">
+                        <li><a href="#overview" class="active">Overview</a></li>
+                        <li><a href="#abstract-layer">Abstraction Layer</a></li>
+                        <li><a href="#native-adapter">Native Adapter</a></li>
+                        <li><a href="#redux-adapter">Redux Adapter</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="content">
+                <h1 id="overview">Option Adapter</h1>
+                <p>The <code>jankx/option-adapter</code> acts as a bridge between the theme settings and the data storage engine. It allows Jankx to work seamlessly with different option frameworks like <strong>Redux Framework</strong> or WordPress's <strong>Native Options API</strong>.</p>
+
+                <h2 id="abstract-layer">Abstraction Layer</h2>
+                <p>By using the adapter pattern, Jankx core remains agnostic of how data is saved. This means you can switch from a heavy framework to a native implementation without changing your theme's logic.</p>
+                
+                <pre><code>interface OptionAdapterInterface {
+    public function get($key, $default = null);
+    public function set($key, $value);
+    public function save();
+}</code></pre>
+
+                <h2 id="native-adapter">Native Adapter</h2>
+                <p>The Native Adapter uses standard WordPress <code>get_option</code> and <code>update_option</code>. It is lightweight and recommended for simple sites.</p>
+
+                <h2 id="redux-adapter">Redux Adapter</h2>
+                <p>The Redux Adapter connects Jankx to the popular Redux Framework. It maps field types and sections correctly to ensure compatibility with legacy themes or advanced configurations.</p>
+
+                <pre><code>use Jankx\Option\Adapters\ReduxAdapter;
+
+// Registering the adapter
+$adapter = new ReduxAdapter('opt_name');
+jankx_register_option_adapter($adapter);</code></pre>
+
+                <hr>
+                <p style="text-align: center; color: var(--text-muted);">
+                    Developed with ❤️ by Jankx Team.
+                </p>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
