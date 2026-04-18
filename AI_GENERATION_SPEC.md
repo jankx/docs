@@ -96,3 +96,13 @@ Instead of complex style calculations in both JS and PHP, use CSS Variables:
 - **PHP**: Inject variables into the style attribute of the wrapper via `AssetResolver::INSTANCE`.
 - **JS**: Pass variables into the `style` prop of `useBlockProps`.
 - **CSS**: The block-level `.scss` uses these variables for layout, ensuring both environments render exactly the same layout without duplicated logic.
+
+## 10. Template Spacing & Margin Rules
+
+To prevent unnecessary whitespaces (khoảng trắng không cần thiết) in the generated themes:
+
+1. **Root Main Margins**: Always set `margin-top: 0` and `margin-bottom: 0` on the root `<main>` or container groups in page templates. Default WordPress margins often cause white gaps between the header/footer and the dark theme content.
+   - Example: `<!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"0","bottom":"0"},"padding":{"top":"0","bottom":"0"}}}} -->`
+2. **Card Wrappers**: When using `jankx/dynamic-data-template`, DO NOT apply borders, backgrounds, or padding directly to the template block itself. Instead, wrap the inner content (like images and text) in a `wp:group` and apply the styles there. This prevents the layout system from misapplying styles to the entire grid container.
+3. **Contrast & Link Colors**: Default `wp:post-title` and `wp:post-terms` generate blue links. Always use CSS overrides or proper wrapper classes (e.g., `.has-link-color`) to ensure text contrast remains readable on dark backgrounds.
+4. **Grid Layout Fix**: When forcing `.post-type-layout-grid` to `display: grid`, Jankx's built-in flex widths (e.g., `width: 33.3%`) will cause grid items to shrink drastically. Always pair it with `.post-type-layout-grid > * { width: 100% !important; max-width: 100% !important; flex: none !important; }`.
