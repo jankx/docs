@@ -2,9 +2,14 @@
 
 This document provides technical mapping rules for AI models to generate Jankx-compliant components and themes from visual designs (Figma/Images).
 
-## 1. CSS Level Mapping Rules
+## 1. Zero External CSS Philosophy
 
-When generating CSS, categorize rules into the following levels:
+AI MODELS MUST AVOID WRITING CSS TO EXTERNAL FILES (like `style.css`). 
+1. **Primary Choice**: Use standard `theme.json` properties (settings, styles, elements).
+2. **Secondary Choice**: Use Block Attributes in the block code.
+3. **Fallback**: Use the `css` property in `theme.json` (for global/block levels) or `AssetResolver` for complex dynamic instance CSS.
+
+## 2. CSS Level Mapping Rules (Modernized)
 
 ### CORE_LAYOUT (Level 1)
 - **What to include**: Base layout tokens, utility classes, and fundamental design rules.
