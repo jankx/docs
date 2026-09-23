@@ -1,6 +1,6 @@
-# Star Rating API Documentation
+# Star Rating & Review System Documentation
 
-Hệ thống Rating REST API cho Jankx Theme — cung cấp khả năng đánh giá sao (star rating) trên tất cả post types.
+Hệ thống Rating & Review cho Jankx Theme — cung cấp khả năng đánh giá sao (star rating) và form review trên tất cả post types.
 
 ---
 
@@ -8,11 +8,13 @@ Hệ thống Rating REST API cho Jankx Theme — cung cấp khả năng đánh g
 
 1. [Overview](#overview)
 2. [Architecture](#architecture)
-3. [REST API](#rest-api)
+3. [Blocks](#blocks)
+   - [`jankx/star-rating`](#block-star-rating) — Hiển thị rating sao
+   - [`jankx/review-form`](#block-review-form) — Form đánh giá cho user
+4. [REST API](#rest-api)
    - [POST /wp-json/jankx/v1/star-rating/submit](#post-submit)
    - [GET /wp-json/jankx/v1/star-rating/providers](#get-providers)
-4. [Shortcode](#shortcode)
-5. [Gutenberg Block](#gutenberg-block)
+5. [Shortcode](#shortcode)
 6. [Extending the System](#extending)
    - [Registering a Custom Provider](#registering-custom-provider)
    - [ConfigurableRatingProvider](#configurable-provider)
@@ -26,11 +28,12 @@ Hệ thống Rating REST API cho Jankx Theme — cung cấp khả năng đánh g
 
 ## Overview
 
-Star Rating API cho phép:
+Star Rating & Review System cho phép:
 
 - **Đọc rating** từ database qua Providers (Strategy Pattern)
 - **Ghi rating** qua REST API (tạo comment type `review`)
-- **Hiển thị form** qua Shortcode hoặc React Component
+- **Hiển thị星星** qua `jankx/star-rating` block
+- **Nhận review** qua `jankx/review-form` block
 - **Mở rộng** bằng cách register Provider mới
 
 ### Tech Stack
@@ -44,16 +47,22 @@ Star Rating API cho phép:
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Gutenberg Block                       │
-│                  (jankx/star-rating)                     │
-└─────────────────────┬───────────────────────────────────┘
-                      │
-                      ▼
-┌─────────────────────────────────────────────────────────┐
-│                   StarRatingRegistry                     │
-│              (Singleton, manages providers)               │
-└──────┬────────────┬────────────┬────────────┬───────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                       Gutenberg Blocks                           │
+│  ┌──────────────────┐          ┌──────────────────┐            │
+│  │  jankx/star-rating│          │ jankx/review-form │            │
+│  │  (Display rating) │          │ (Submit rating)   │            │
+│  └────────┬─────────┘          └────────┬─────────┘            │
+│           │                              │                      │
+│           │  GET providers               │  POST submit         │
+│           │                              │                      │
+└───────────┼──────────────────────────────┼──────────────────────┘
+            │                              │
+            ▼                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    StarRatingRegistry                            │
+│               (Singleton, manages providers)                      │
+└──────┬────────────┬────────────┬────────────┬────────────────────┘
        │            │            │            │
        ▼            ▼            ▼            ▼
 ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────────────┐
@@ -69,23 +78,217 @@ Star Rating API cho phép:
            │ product / ...  │
            └────────────────┘
 
-┌─────────────────────────────────────────────────────────┐
-│              RatingSubmission (REST API)                 │
-│         POST /wp-json/jankx/v1/star-rating/submit        │
-└─────────────────────┬───────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│              RatingSubmission (REST API)                         │
+│         POST /wp-json/jankx/v1/star-rating/submit                │
+└─────────────────────┬───────────────────────────────────────────┘
                       │
                       ▼
-┌─────────────────────────────────────────────────────────┐
-│            WordPress Comment System                      │
-│         (comment type: review)                           │
-└─────────────────────┬───────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│            WordPress Comment System                              │
+│         (comment type: review)                                   │
+└─────────────────────┬───────────────────────────────────────────┘
                       │
                       ▼
-┌─────────────────────────────────────────────────────────┐
-│            RatingRepository (comment-rating ext)         │
-│      Computes: jankx_rating_average, jankx_rating_count │
-│      Syncs: _tour_rating, _place_rating, ...            │
-└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│            RatingRepository (comment-rating ext)                 │
+│      Computes: jankx_rating_average, jankx_rating_count         │
+│      Syncs: _tour_rating, _place_rating, ...                    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Blocks
+
+<a id="block-star-rating"></a>
+### Block: `jankx/star-rating`
+
+Hiển thị rating sao (stars hoặc summary) trên trang.
+
+#### Khi nào dùng
+
+- Hiển thị rating hiện tại của bài viết
+- Component read-only, không có form nhập
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `ratingSource` | string | `'manual'` | Nguồn dữ liệu rating |
+| `manualRating` | number | `5` | Giá trị rating thủ công |
+| `displayStyle` | string | `'stars'` | Kiểu hiển thị: `stars` hoặc `summary` |
+| `starSize` | number | `16` | Kích thước sao (px) |
+| `starColor` | string | `'#f1c40f'` | Màu sao |
+| `starEmptyColor` | string | `'#dddddd'` | Màu sao trống |
+| `showCount` | boolean | `false` | Hiển thị số lượng đánh giá |
+| `align` | string | `'left'` | Căn lề: `left`, `center`, `right` |
+| `iconType` | string | `'text'` | Kiểu icon: `text` hoặc `svg` |
+
+#### Style Presets
+
+Block cung cấp 5 preset có sẵn:
+
+| Preset | Style | Mô tả |
+|--------|-------|-------|
+| `stars-default` | ★★★★☆ | Stars cơ bản |
+| `stars-with-count` | ★★★★☆ (123) | Stars + số review |
+| `summary-default` | ★ 4.5 (123) | Summary format |
+| `google-summary` | ★ 4.6 (39,092) | Google-style summary |
+| `compact-stars` | ★★★★★ | Nhỏ gọn |
+
+#### Rating Sources
+
+Provider được đăng ký tự động bởi các extensions:
+
+| Source ID | Label | Post Types | Meta Keys |
+|-----------|-------|------------|-----------|
+| `tour_rating` | Tour Rating | `tour` | `jankx_rating_average`, `jankx_rating_count` |
+| `place_rating` | Place Rating | `place` | `jankx_rating_average`, `jankx_rating_count` |
+| `service_rating` | Service Rating | `service` | `jankx_rating_average`, `jankx_rating_count` |
+| `product_rating` | Product Rating | `product` | `jankx_rating_average`, `jankx_rating_count` |
+| `experience_rating` | Experience Rating | `experience` | `jankx_rating_average`, `jankx_rating_count` |
+| `manual` | Manual | all | `manualRating` attribute |
+| `woocommerce` | WooCommerce | `product` | WooCommerce rating |
+| `post_meta` | Post Meta | all | configurable meta keys |
+
+#### Files
+
+| File | Path | Description |
+|------|------|-------------|
+| `block.json` | `resources/blocks/star-rating/block.json` | Block metadata |
+| `edit.tsx` | `resources/blocks/star-rating/edit.tsx` | Editor component |
+| `index.tsx` | `resources/blocks/star-rating/index.tsx` | Block registration |
+| `style.scss` | `resources/blocks/star-rating/style.scss` | Frontend styles |
+| `editor.scss` | `resources/blocks/star-rating/editor.scss` | Editor styles |
+| `StarRatingBlock.php` | `jankx/.../Blocks/StarRatingBlock.php` | Server-side render |
+
+---
+
+<a id="block-review-form"></a>
+### Block: `jankx/review-form`
+
+Form đánh giá sao cho user submit review.
+
+#### Khi nào dùng
+
+- Trang single post (tour, experience, place, product, service)
+- Section "Viết đánh giá" ở cuối bài
+- Kết hợp với `jankx/star-rating` để hiển thị rating hiện tại
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `postId` | number | `0` | Post ID (auto-detect từ editor) |
+| `maxRating` | number | `5` | Số sao tối đa (3-10) |
+| `showReview` | boolean | `true` | Hiển thị textarea review |
+| `showProsCons` | boolean | `false` | Hiển thị ô Pros/Cons |
+| `showLoginForm` | boolean | `true` | Hiển thị login cho guest |
+| `formTitle` | string | `''` | Tiêu đề form (default: "Đánh giá của bạn") |
+| `submitText` | string | `''` | Text nút submit (default: "Gửi đánh giá") |
+| `starSize` | number | `32` | Kích thước sao (px) |
+| `starColor` | string | `'#f1c40f'` | Màu sao |
+| `starEmptyColor` | string | `'#dddddd'` | Màu sao trống |
+| `customCSS` | string | `''` | Custom CSS cho form |
+
+#### Editor Features
+
+- **Preview** — Stars interactive với hover/click trong editor
+- **Inspector Controls** — Panel bên phải để config
+- **Post selector** — Auto-detect post ID từ editor
+- **Live preview** — Thay đổi settings thấy ngay
+
+#### Frontend Features
+
+- **Stars interactive** — Hover + click để chọn rating
+- **Review textarea** — Nhận xét tự do
+- **Pros/Cons** — 2 cột nhập điểm mạnh/yếu
+- **Guest support** — Nhập tên, email cho khách
+- **Login link** — Liên kết đăng nhập
+- **AJAX submit** — Gửi không reload trang
+- **Success/error messages** — Thông báo kết quả
+- **Auto-update** — Cập nhật `jankx/star-rating` block nếu có trên cùng post
+
+#### Workflow
+
+```
+User mở trang single post
+        │
+        ▼
+Nhìn thấy form "Đánh giá của bạn"
+        │
+        ├─ Đã đăng nhập → Hiển thị tên + avatar
+        │
+        └─ Chưa đăng nhập → Hiển thị link "Đăng nhập" + guest fields
+                │
+                ▼
+        Chọn số sao (click/hover)
+                │
+                ▼
+        Nhập review text (optional)
+                │
+                ▼
+        Nhập Pros/Cons (nếu bật)
+                │
+                ▼
+        Click "Gửi đánh giá"
+                │
+                ▼
+        POST /wp-json/jankx/v1/star-rating/submit
+                │
+                ├─ Success → Thông báo thành công + update rating display
+                │
+                └─ Error → Hiển thị lỗi (đã đánh giá, bài viết không tồn tại, etc.)
+```
+
+#### Files
+
+| File | Path | Description |
+|------|------|-------------|
+| `block.json` | `resources/blocks/review-form/block.json` | Block metadata |
+| `edit.tsx` | `resources/blocks/review-form/edit.tsx` | Editor component |
+| `save.tsx` | `resources/blocks/review-form/save.tsx` | Dynamic (returns null) |
+| `render.php` | `resources/blocks/review-form/render.php` | Server-side render |
+| `frontend.js` | `resources/blocks/review-form/frontend.js` | Frontend JS |
+| `style.scss` | `resources/blocks/review-form/style.scss` | Frontend styles |
+| `editor.scss` | `resources/blocks/review-form/editor.scss` | Editor styles |
+| `index.tsx` | `resources/blocks/review-form/index.tsx` | Block registration |
+
+#### PHP Config (render.php)
+
+```php
+wp_localize_script('jankx-review-form-frontend', 'jankxReviewForm', [
+    'postId'        => $postId,
+    'maxRating'     => 5,
+    'showReview'    => true,
+    'showProsCons'  => false,
+    'showLoginForm' => true,
+    'restUrl'       => 'https://nibitour.vn/wp-json/jankx/v1/star-rating/submit',
+    'nonce'         => 'wp_rest_nonce',
+    'isLoggedIn'    => false,
+    'i18n'          => [
+        'title'          => 'Đánh giá của bạn',
+        'yourRating'     => 'Đánh giá của bạn',
+        'submit'         => 'Gửi đánh giá',
+        'submitting'     => 'Đang gửi...',
+        'success'        => 'Cảm ơn bạn đã đánh giá!',
+        'error'          => 'Có lỗi xảy ra, vui lòng thử lại.',
+        'alreadyRated'   => 'Bạn đã đánh giá bài viết này rồi.',
+        'loginRequired'  => 'Vui lòng đăng nhập để đánh giá.',
+    ],
+]);
+```
+
+#### Usage Example
+
+```php
+// Trang single-tour.php hoặc block template
+<!-- Hiển thị rating hiện tại -->
+<!-- wp:block {"name":"jankx/star-rating","attributes":{"ratingSource":"tour_rating","displayStyle":"summary","showCount":true}} /-->
+
+<!-- Form đánh giá -->
+<!-- wp:block {"name":"jankx/review-form","attributes":{"maxRating":5,"showProsCons":true}} /-->
 ```
 
 ---
@@ -262,7 +465,7 @@ GET /wp-json/jankx/v1/star-rating/providers?post_type=tour
 
 ### `[jankx_rating_form]`
 
-Embed form đánh giá sao trên bất kỳ trang nào.
+Embed form đánh giá sao trên bất kỳ trang nào (alternative cho block).
 
 #### Parameters
 
@@ -288,43 +491,6 @@ Embed form đánh giá sao trên bất kỳ trang nào.
 // Chỉ hiển thị rating, không có review text
 [jankx_rating_form show_review="no"]
 ```
-
----
-
-## Gutenberg Block
-
-### Block: `jankx/star-rating`
-
-Hiển thị rating sao trên trang.
-
-#### Attributes
-
-| Attribute | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `ratingSource` | string | `'manual'` | Nguồn dữ liệu rating |
-| `manualRating` | number | `5` | Giá trị rating thủ công |
-| `displayStyle` | string | `'stars'` | Kiểu hiển thị: `stars` hoặc `summary` |
-| `starSize` | number | `16` | Kích thước sao (px) |
-| `starColor` | string | `'#f1c40f'` | Màu sao |
-| `starEmptyColor` | string | `'#dddddd'` | Màu sao trống |
-| `showCount` | boolean | `false` | Hiển thị số lượng đánh giá |
-| `align` | string | `'left'` | Căn lề: `left`, `center`, `right` |
-| `iconType` | string | `'text'` | Kiểu icon: `text` hoặc `svg` |
-
-#### Rating Sources
-
-Provider được đăng ký tự động bởi các extensions:
-
-| Source ID | Label | Post Types | Meta Keys |
-|-----------|-------|------------|-----------|
-| `tour_rating` | Tour Rating | `tour` | `jankx_rating_average`, `jankx_rating_count` |
-| `place_rating` | Place Rating | `place` | `jankx_rating_average`, `jankx_rating_count` |
-| `service_rating` | Service Rating | `service` | `jankx_rating_average`, `jankx_rating_count` |
-| `product_rating` | Product Rating | `product` | `jankx_rating_average`, `jankx_rating_count` |
-| `experience_rating` | Experience Rating | `experience` | `jankx_rating_average`, `jankx_rating_count` |
-| `manual` | Manual | all | `manualRating` attribute |
-| `woocommerce` | WooCommerce | `product` | WooCommerce rating |
-| `post_meta` | Post Meta | all | configurable meta keys |
 
 ---
 
@@ -426,7 +592,7 @@ class CustomRatingProvider implements StarRatingProviderInterface
     public function getRating(int $postId, array $attributes): float
     {
         // Custom logic to get rating
-        // Ví dụ: query từ external API,计算 từ multiple sources, etc.
+        // Ví dụ: query từ external API, tính từ multiple sources, etc.
         $rating = get_post_meta($postId, '_my_custom_rating', true);
         return max(0.0, min(5.0, (float) $rating));
     }
@@ -578,7 +744,7 @@ add_action('jankx/star_rating/submitted', function ($commentId, $postId, $rating
 ### Data Flow
 
 ```
-User submits rating
+User submits rating (qua review-form block hoặc REST API)
         │
         ▼
 REST API creates comment (type: review)
@@ -650,6 +816,8 @@ RatingRepository::save()
 
 ## PHP Files Reference
 
+### Core Framework (`jankx/includes/framework/Gutenberg/StarRating/`)
+
 | File | Description |
 |------|-------------|
 | `StarRatingProviderInterface.php` | Interface cho providers |
@@ -662,6 +830,13 @@ RatingRepository::save()
 | `Providers/WooCommerceRatingProvider.php` | WooCommerce integration |
 | `Providers/PostMetaRatingProvider.php` | Custom meta key |
 | `Providers/CrawlerRatingProvider.php` | Crawler/scraper rating |
+
+### Blocks (`resources/blocks/`)
+
+| Block | Files |
+|-------|-------|
+| `star-rating` | `block.json`, `edit.tsx`, `index.tsx`, `style.scss`, `editor.scss` |
+| `review-form` | `block.json`, `edit.tsx`, `save.tsx`, `render.php`, `frontend.js`, `style.scss`, `editor.scss` |
 
 ---
 
@@ -719,4 +894,47 @@ class MyToursExtension extends AbstractExtension
         // Ví dụ: gửi email, update analytics, trigger webhook
     }
 }
+```
+
+---
+
+## Usage: Trang Tour Template
+
+```php
+<!-- single-tour.php hoặc block template -->
+
+<!-- 1. Hiển thị rating hiện tại -->
+<!-- wp:block {"name":"jankx/star-rating","attributes":{
+    "ratingSource":"tour_rating",
+    "displayStyle":"summary",
+    "showCount":true,
+    "starSize":18
+}} /-->
+
+<!-- 2. Form đánh giá -->
+<!-- wp:block {"name":"jankx/review-form","attributes":{
+    "maxRating":5,
+    "showReview":true,
+    "showProsCons":true,
+    "formTitle":"Đánh giá Tour này",
+    "submitText":"Gửi đánh giá"
+}} /-->
+```
+
+Kết quả trên frontend:
+```
+┌─────────────────────────────────────────┐
+│  ★ 4.2 (15 đánh giá)                    │  ← jankx/star-rating
+├─────────────────────────────────────────┤
+│  Đánh giá của bạn                       │
+│  ┌─ ★ ★ ★ ★ ☆ ─┐                       │
+│  │                                    │  ← jankx/review-form
+│  │  [Nhận xét của bạn...]             │
+│  │                                    │
+│  │  Điểm mạnh      Điểm yếu           │
+│  │  [...]          [...]              │
+│  │                                    │
+│  │  [Gửi đánh giá]                    │
+│  └────────────────────────────────────┘
+└─────────────────────────────────────────┘
 ```
