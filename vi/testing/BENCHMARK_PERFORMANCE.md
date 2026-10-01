@@ -18,10 +18,11 @@ cụ này đo cả hai:
 
 | File | Vai trò |
 | --- | --- |
-| `bench.php` | CLI: `probe`, `calls`, `trace`, `http`, `report` |
+| `bench.php` | CLI: `probe`, `calls`, `trace`, `http`, `report`, `graph` |
 | `collect.php` | Khởi động WordPress trong tiến trình PHP con và xuất JSON |
 | `lib/CallProfiler.php` | Chạy tiến trình con dưới Xdebug, tìm file output |
 | `lib/CachegrindParser.php` | Phân tích output cachegrind của Xdebug thành call graph |
+| `lib/FlameGraph.php` | Vẽ call graph đã parse thành flame graph SVG/HTML độc lập |
 
 Artifact được ghi vào `benchmarks/.work/` và không được commit.
 
@@ -47,10 +48,38 @@ php benchmarks/bench.php http --runs=5
 
 # Xuất báo cáo JSON để CI hoặc so sánh trước/sau.
 php benchmarks/bench.php report --scenario=home
+
+# Flame graph tương tác (HTML + SVG trong benchmarks/report/).
+php benchmarks/bench.php graph --scenario=home
+
+# Vẽ lại từ capture đã có thay vì profile lại.
+php benchmarks/bench.php graph --scenario=home --file=benchmarks/.work/cachegrind_home/jankx_home_28724
 ```
 
 `--scenario` nhận `boot`, `home`, `page`. `boot` dừng sau khi WordPress nạp
 xong; `home` và `page` render thêm front template.
+
+`--width` đặt chiều rộng pixel của SVG, `--depth` giới hạn số tầng được vẽ
+(mặc định: width 1400, depth 14).
+
+### Đọc flame graph
+
+Lệnh `graph` ghi ra một file HTML độc lập trong `benchmarks/report/` - mở
+trực tiếp bằng trình duyệt, không cần server. Rê chuột lên một frame để xem
+tên hàm, self time và số lần gọi.
+
+Hai tính chất làm cho độ rộng frame đáng tin cậy:
+
+- Mỗi hàm có thời gian thực sự chỉ nhận đúng một frame, kích thước theo self time
+  của thân hàm. Cachegrind gộp edge theo tên hàm, nên call graph là DAG chứ không
+  phải cây; bộ vẽ dựng một spanning tree để không hàm nào bị đếm hai lần.
+- Vì vậy tổng self time được vẽ luôn bằng đúng tổng của profiler. Nếu
+  `total inclusive` ở header không khớp `profiled CPU` của lệnh `calls`, graph đó
+  đang sai.
+
+Độ rộng frame là self time của cả subtree, không phải inclusive cost của một hàm
+đơn lẻ. Flame graph kiểu stack cổ điển không thể tái tạo từ dữ liệu cachegrind,
+vì capture không lưu thứ tự stack.
 
 ### Xdebug
 
@@ -107,6 +136,9 @@ parse query.
 | Tổng số call event | 1,307,002 |
 | CPU time được profile | 11.28 s |
 | Đơn vị cost | 10 ns |
+
+Lệnh `graph` báo đúng 11,602.72 ms ở `total inclusive`, với 8 root child và
+toàn bộ 5,577 hàm có thời gian được vẽ đúng một lần.
 
 Top hàm theo self time:
 

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benchmark &amp; Hiệu Năng - Tài liệu Jankx Theme</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --border: rgba(255, 255, 255, 0.1);
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .logo-text { font-weight: 600; }
+
+        nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active { color: var(--primary); }
+
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .lang-switch:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .sidebar-section { margin-bottom: 32px; }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .sidebar-links { list-style: none; }
+        .sidebar-links li { margin-bottom: 4px; }
+
+        .sidebar-links a {
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+
+        .sidebar-links a:hover, .sidebar-links a.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .content { max-width: none; }
+
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 40px 0 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 24px 0 12px;
+        }
+
+        .content p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .content pre {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .content p code, .content li code, .content td code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--primary);
+        }
+
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.9375rem;
+        }
+
+        .content th, .content td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .content th {
+            background: rgba(255,255,255,0.02);
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content ul, .content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .content li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .content a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .content a:hover { text-decoration: underline; }
+
+        .content blockquote {
+            border-left: 3px solid var(--primary);
+            background: var(--bg-card);
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .content blockquote p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 40px 0;
+        }
+
+        .rec {
+            border-left: 3px solid var(--warning);
+        }
+
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            header { position: static; background: var(--bg-dark); }
+            nav { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .content h1 { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../" class="logo">
+                    <span class="logo-icon">J</span>
+                    <span class="logo-text">Jankx Theme</span>
+                </a>
+                <nav>
+                    <a href="./">Tài liệu</a>
+                    <a href="https://github.com/jankx/jankx-lite" target="_blank">GitHub</a>
+                    <a href="../../en/testing/benchmark-performance.html" class="lang-switch">🇺🇸 EN</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Benchmark</p>
+                    <ul class="sidebar-links">
+                        <li><a href="#muc-dich">Mục đích</a></li>
+                        <li><a href="#cong-cu">Công cụ</a></li>
+                        <li><a href="#flamegraph">Đọc flame graph</a></li>
+                        <li><a href="#baseline">Baseline</a></li>
+                        <li><a href="#phat-hien">Phát hiện</a></li>
+                        <li><a href="#luu-y">Lưu ý</a></li>
+                        <li><a href="#litespeed">LiteSpeed</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Khác</p>
+                    <ul class="sidebar-links">
+                        <li><a href="./">← Hướng Dẫn Kiểm Thử</a></li>
+                        <li><a href="../getting-started/">Bắt Đầu</a></li>
+                        <li><a href="../layout-system/">Hệ Thống Layout</a></li>
+                        <li><a href="../admin/">Hệ Thống Quản Trị</a></li>
+                        <li><a href="../extensions/">Extensions</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="content">
+                <h1>Benchmark &amp; Hiệu Năng</h1>
+                <p>Công cụ đo hiệu năng và baseline đã đo cho Jankx theme framework, child theme Nobitour, và toàn bộ hệ sinh thái extension.</p>
+
+                <h2 id="muc-dich">Mục đích</h2>
+                <p>Chỉ đo wall-clock không cho biết <em>tại sao</em> một trang chậm. Trang tải 10 giây có thể do một truy vấn chậm, hoặc do hơn một triệu lời gọi hàm rẻ tiền. Bộ công cụ này đo cả hai:</p>
+                <ul>
+                    <li><strong>Wall time</strong> - thời gian người dùng phải chờ (HTTP và các giai đoạn PHP).</li>
+                    <li><strong>Call graph</strong> - hàm nào được gọi, gọi bao nhiêu lần, CPU nằm ở đâu.</li>
+                    <li><strong>Cơ sở dữ liệu</strong> - số truy vấn, thời gian SQL, và truy vấn trùng cấu trúc.</li>
+                    <li><strong>Payload</strong> - kích thước HTML, options autoload, số file PHP nạp vào, memory.</li>
+                </ul>
+
+                <h2 id="cong-cu">Công cụ</h2>
+                <table>
+                    <thead>
+                        <tr><th>File</th><th>Vai trò</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>bench.php</code></td><td>CLI: <code>probe</code>, <code>calls</code>, <code>trace</code>, <code>http</code>, <code>report</code>, <code>graph</code></td></tr>
+                        <tr><td><code>collect.php</code></td><td>Khởi động WordPress trong tiến trình PHP con và xuất JSON</td></tr>
+                        <tr><td><code>lib/CallProfiler.php</code></td><td>Chạy tiến trình con dưới Xdebug, tìm file output</td></tr>
+                        <tr><td><code>lib/CachegrindParser.php</code></td><td>Phân tích output cachegrind của Xdebug thành call graph</td></tr>
+                        <tr><td><code>lib/FlameGraph.php</code></td><td>Vẽ call graph đã parse thành flame graph SVG/HTML độc lập</td></tr>
+                    </tbody>
+                </table>
+                <p>Artifact được ghi vào <code>benchmarks/.work/</code> và không được commit.</p>
+
+                <h3>Các lệnh</h3>
+                <p>Chạy từ thư mục theme <code>jankx</code>:</p>
+                <pre><code># Chỉ probe WordPress, không có overhead profiler.
+php benchmarks/bench.php probe --scenario=boot
+
+# Probe kèm render trang chủ.
+php benchmarks/bench.php probe --scenario=home
+
+# Xdebug profile + call graph đã parse (lệnh phân tích chính).
+php benchmarks/bench.php calls --scenario=home --top=30
+
+# Xdebug trace: đếm số lần gọi hàm (dễ đọc hơn profile).
+php benchmarks/bench.php trace --scenario=boot --top=25
+
+# Đo latency HTTP end-to-end, kèm kiểm tra header cache/nén.
+php benchmarks/bench.php http --runs=5
+
+# Xuất báo cáo JSON để CI hoặc so sánh trước/sau.
+php benchmarks/bench.php report --scenario=home
+
+# Flame graph tương tác (HTML + SVG trong benchmarks/report/).
+php benchmarks/bench.php graph --scenario=home
+
+# Vẽ lại từ capture đã có thay vì profile lại.
+php benchmarks/bench.php graph --scenario=home --file=benchmarks/.work/cachegrind_home/jankx_home_28724</code></pre>
+                <p><code>--scenario</code> nhận <code>boot</code>, <code>home</code>, <code>page</code>. <code>boot</code> dừng sau khi WordPress nạp xong; <code>home</code> và <code>page</code> render thêm front template.</p>
+                <p><code>--width</code> đặt chiều rộng pixel của SVG, <code>--depth</code> giới hạn số tầng được vẽ (mặc định: width 1400, depth 14).</p>
+
+                <h3>Xdebug</h3>
+                <p>Harness tự chạy tiến trình con, nên <code>xdebug.mode</code> để <code>off</code> trong <code>php.ini</code> và không bao giờ làm chậm traffic thường. Tiến trình con được gọi với <code>xdebug.mode=profile</code> (hoặc <code>trace</code>) một cách tường minh.</p>
+                <p>Hai chi tiết định dạng mà parser xử lý, cả hai đều làm hỏng kết quả nếu bỏ qua:</p>
+                <ul>
+                    <li>Xdebug ghi <code>events: Time_(10ns)</code>. Giá trị cost thô tính bằng tick 10 nano-giây, không phải micro-giây. Giả định micro-giây làm mọi thời gian lớn hơn 100 lần.</li>
+                    <li>Xdebug ghi <code>positions: line</code>, thêm một cột số dòng ở đầu mỗi cost line. Đọc cột đó như cost thời gian lại làm thời gian phình lên lần nữa.</li>
+                </ul>
+                <p><code>cost unit</code> được in ra trong output của <code>calls</code> để có thể kiểm chứng phép đổi đơn vị. Luôn đối chiếu với <code>WP wall time</code> đã báo.</p>
+
+                <h2 id="flamegraph">Đọc flame graph</h2>
+                <p>Lệnh <code>graph</code> ghi ra một file HTML độc lập trong <code>benchmarks/report/</code> - mở trực tiếp bằng trình duyệt, không cần server. Rê chuột lên một frame để xem tên hàm, self time và số lần gọi.</p>
+                <p>Hai tính chất làm cho độ rộng frame đáng tin cậy:</p>
+                <ul>
+                    <li>Mỗi hàm có thời gian thực sự chỉ nhận đúng một frame, kích thước theo self time của thân hàm. Cachegrind gộp edge theo tên hàm, nên call graph là DAG chứ không phải cây; bộ vẽ dựng một spanning tree để không hàm nào bị đếm hai lần.</li>
+                    <li>Vì vậy tổng self time được vẽ luôn bằng đúng tổng của profiler. Nếu <code>total inclusive</code> ở header không khớp <code>profiled CPU</code> của lệnh <code>calls</code>, graph đó đang sai.</li>
+                </ul>
+                <p>Độ rộng frame là self time của cả subtree, không phải inclusive cost của một hàm đơn lẻ. Flame graph kiểu stack cổ điển không thể tái tạo từ dữ liệu cachegrind, vì capture không lưu thứ tự stack.</p>
+
+                <h2 id="baseline">Baseline</h2>
+                <p>Đo trên stack local: nginx 1.28.2, PHP 8.3.30 (ZTS), MySQL 8.4, WordPress có Debug Bar và Polylang đang bật, <code>WP_DEBUG</code> bật.</p>
+                <blockquote class="rec">
+                    <p>Số liệu có profiler đã bao gồm overhead của chính Xdebug. Hãy hiểu chúng là tín hiệu tương đối để xếp hạng, không phải latency production.</p>
+                </blockquote>
+
+                <h3>HTTP (<code>--runs=3</code>)</h3>
+                <table>
+                    <thead><tr><th>Chỉ số</th><th>Giá trị</th></tr></thead>
+                    <tbody>
+                        <tr><td>Cold</td><td>1329 ms</td></tr>
+                        <tr><td>Median (warm)</td><td>996 ms</td></tr>
+                        <tr><td>Min</td><td>954 ms</td></tr>
+                        <tr><td>HTML</td><td>710.2 KB</td></tr>
+                        <tr><td><code>Content-Encoding</code></td><td><strong>không có</strong> - HTML gửi không nén</td></tr>
+                        <tr><td><code>Cache-Control</code> / <code>Expires</code></td><td>không có</td></tr>
+                        <tr><td><code>Server</code></td><td>nginx/1.28.2</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Các giai đoạn PHP (<code>--scenario=home</code>)</h3>
+                <table>
+                    <thead><tr><th>Giai đoạn</th><th>Thời gian</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>wp_loaded</code></td><td>3444.7 ms</td></tr>
+                        <tr><td><code>query_parsed</code></td><td>3479.2 ms</td></tr>
+                        <tr><td><code>rendered</code> (tổng)</td><td>10307 ms</td></tr>
+                    </tbody>
+                </table>
+                <p>Render chiếm phần lớn: khoảng 6.8 giây được tiêu sau khi WordPress đã nạp và parse query.</p>
+
+                <h3>Call profile (<code>--scenario=home</code>)</h3>
+                <table>
+                    <thead><tr><th>Chỉ số</th><th>Giá trị</th></tr></thead>
+                    <tbody>
+                        <tr><td>Số hàm được profile</td><td>5,577</td></tr>
+                        <tr><td>Tổng số call event</td><td>1,307,002</td></tr>
+                        <tr><td>CPU time được profile</td><td>11.28 s</td></tr>
+                        <tr><td>Đơn vị cost</td><td>10 ns</td></tr>
+                    </tbody>
+                </table>
+                <p>Lệnh <code>graph</code> báo đúng 11,602.72 ms ở <code>total inclusive</code>, với 8 root child và toàn bộ 5,577 hàm có thời gian được vẽ đúng một lần.</p>
+
+                <p>Top hàm theo self time:</p>
+                <table>
+                    <thead><tr><th>Self time</th><th>Số lần gọi</th><th>Hàm</th></tr></thead>
+                    <tbody>
+                        <tr><td>654.5 ms</td><td>1</td><td><code>curl_exec</code> (gọi HTTP ngoài trong lúc render)</td></tr>
+                        <tr><td>641.4 ms</td><td>1</td><td><code>require_once wp-settings.php</code></td></tr>
+                        <tr><td>462.9 ms</td><td>59,801</td><td><code>apply_filters</code></td></tr>
+                        <tr><td>407.8 ms</td><td>560</td><td>Polylang Composer ClassLoader closure</td></tr>
+                        <tr><td>349.6 ms</td><td>7,092</td><td><code>WP_Hook-&gt;apply_filters</code></td></tr>
+                        <tr><td>345.3 ms</td><td>35,127</td><td><code>_wp_array_get</code></td></tr>
+                        <tr><td>336.2 ms</td><td>82</td><td><code>WP_Theme_JSON::sanitize</code></td></tr>
+                        <tr><td>294.7 ms</td><td>10,950</td><td><code>WP_HTML_Tag_Processor-&gt;parse_next_attribute</code></td></tr>
+                        <tr><td>256.4 ms</td><td>17,535</td><td><code>WP_Scripts-&gt;get_highest_fetchpriority_with_dependents</code></td></tr>
+                    </tbody>
+                </table>
+
+                <p>Các cạnh khuếch đại đáng chú ý:</p>
+                <table>
+                    <thead><tr><th>Số lần</th><th>Cạnh</th></tr></thead>
+                    <tbody>
+                        <tr><td>25,431</td><td><code>ClassLoader-&gt;findFileWithExtension</code> -&gt; <code>substr</code></td></tr>
+                        <tr><td>25,172</td><td><code>WP_Scripts-&gt;get_dependents</code> -&gt; <code>in_array</code></td></tr>
+                        <tr><td>24,116</td><td><code>WP_Theme_JSON::sanitize</code> -&gt; <code>array_keys</code></td></tr>
+                        <tr><td>17,753</td><td><code>WP_Theme_JSON::merge</code> -&gt; <code>_wp_array_get</code> (211.9 ms inclusive)</td></tr>
+                        <tr><td>17,474</td><td><code>WP_Scripts-&gt;get_highest_fetchpriority_with_dependents</code> (đệ quy, 913.9 ms)</td></tr>
+                        <tr><td>11,922</td><td><code>get_option</code> -&gt; <code>apply_filters</code></td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Trace (<code>--scenario=boot</code>)</h3>
+                <p>307,593 entry. Các hàm dẫn đầu lúc boot: <code>substr</code> 25,916, <code>apply_filters</code> 25,392, <code>strrpos</code> 19,918, Composer <code>loadClass</code>/<code>findFile</code> mỗi 4,148. Autoload và dispatch hook chi phối thời gian boot.</p>
+
+                <h3>Cơ sở dữ liệu (<code>--scenario=home</code>)</h3>
+                <p>355 truy vấn, 242 ms SQL, 22 nhóm trùng lặp chiếm 302 truy vấn thừa.</p>
+                <table>
+                    <thead><tr><th>Bảng</th><th>Số truy vấn</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>wp_posts</code></td><td>125</td></tr>
+                        <tr><td><code>wp_options</code></td><td>76</td></tr>
+                        <tr><td><code>wp_terms</code></td><td>71</td></tr>
+                        <tr><td><code>wp_postmeta</code></td><td>56</td></tr>
+                    </tbody>
+                </table>
+
+                <p>Top truy vấn trùng cấu trúc:</p>
+                <table>
+                    <thead><tr><th>Số lần</th><th>Dạng truy vấn</th></tr></thead>
+                    <tbody>
+                        <tr><td>52</td><td><code>SELECT option_value FROM wp_options WHERE option_name = ?</code></td></tr>
+                        <tr><td>51</td><td><code>SELECT ... FROM wp_postmeta WHERE post_id IN (...)</code></td></tr>
+                        <tr><td>46</td><td><code>SELECT * FROM wp_posts WHERE ID = ?</code></td></tr>
+                        <tr><td>42</td><td>Taxonomy <code>SQL_CALC_FOUND_ROWS</code></td></tr>
+                        <tr><td>22</td><td><code>SELECT DISTINCT t.term_id ...</code></td></tr>
+                        <tr><td>17</td><td><code>SELECT FOUND_ROWS()</code></td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Payload</h3>
+                <table>
+                    <thead><tr><th>Chỉ số</th><th>Giá trị</th></tr></thead>
+                    <tbody>
+                        <tr><td>Options autoload</td><td>236 (88.3 KB)</td></tr>
+                        <tr><td>File PHP được nạp</td><td>1,467</td></tr>
+                        <tr><td>Block type đã đăng ký</td><td>272 (86 server-rendered)</td></tr>
+                        <tr><td>Hook / callback</td><td>841 / 1,681</td></tr>
+                        <tr><td>Peak memory</td><td>24 MB</td></tr>
+                    </tbody>
+                </table>
+
+                <h2 id="phat-hien">Phát hiện và khuyến nghị</h2>
+                <p>Xếp theo mức tác động dự kiến lên các số liệu trên.</p>
+
+                <h3>1. Bật nén và header cache</h3>
+                <p>Chiến thắng rẻ nhất: 710 KB HTML được gửi không nén và không có <code>Cache-Control</code>. Bật gzip/brotli thường giảm 70-80% kích thước HTML, giá trị này lớn hơn mọi thay đổi ở tầng PHP với trang này.</p>
+
+                <h3>2. Cache kết quả <code>get_option</code></h3>
+                <p><code>apply_filters</code> chạy 59,801 lần và riêng <code>get_option</code> đã phát ra 52 truy vấn <code>wp_options</code> giống hệt nhau. Object cache bền vững (Redis/Memcached) sẽ loại bỏ cả khối lượng <code>apply_filters</code> lẫn 302 truy vấn thừa.</p>
+
+                <h3>3. Kiểm tra <code>curl_exec</code> trong lúc render</h3>
+                <p>654 ms trong profile là một lời gọi <code>curl_exec</code> duy nhất trên đường render. Nếu nó tải nội dung từ xa không thiết yếu cho lần hiển thị đầu, nên chuyển sang request bất đồng bộ hoặc cache lại response đó.</p>
+
+                <h3>4. Giảm khối lượng xử lý <code>WP_Theme_JSON</code></h3>
+                <p><code>WP_Theme_JSON::sanitize</code> và <code>-&gt;merge</code> cộng lại khoảng 490 ms self time, kéo theo bởi 82 lần sanitize và cạnh 17,753 lần gọi vào <code>_wp_array_get</code>. Việc resolve theme JSON đang lặp lại nhiều hơn cần thiết; cache hoặc pre-compile dữ liệu theme JSON sẽ cắt đáng kể phần này.</p>
+
+                <h3>5. Gộp hoặc cache <code>wp_posts</code> theo ID</h3>
+                <p><code>SELECT * FROM wp_posts WHERE ID = ?</code> chạy 46 lần. Object cache dạng persistent (warm post cache) loại bỏ gần như toàn bộ.</p>
+
+                <h3>6. Đặt object cache bền vững là yêu cầu của dự án</h3>
+                <p>Các mục trên cộng dồn. Khi có Redis, mục 2 và 5 cùng được giải quyết, và phần PHP còn lại trở thành biến duy nhất cần theo dõi.</p>
+
+                <h2 id="luu-y">Lưu ý</h2>
+                <ul>
+                    <li>Số liệu bao gồm <code>WP_DEBUG</code>, Debug Bar và Polylang, đều tạo overhead đáng kể. Hãy đo lại khi tắt chúng trước khi coi giá trị tuyệt đối là latency production.</li>
+                    <li>Xdebug làm phình tổng thời gian. Dùng <code>http --runs=N</code> để đo latency và <code>calls</code> để xếp hạng hotspot tương đối.</li>
+                    <li>Hàm <code>php:internal</code> như <code>substr</code> và <code>in_array</code> chủ yếu là nhiễu, trừ khi chúng nằm trên một cạnh nóng như một số trường hợp ở đây.</li>
+                    <li>Chỉ mới đo trên nginx local. Xem phần LiteSpeed trước khi suy rộng hành vi cache ở tầng server.</li>
+                </ul>
+
+                <h2 id="litespeed">LiteSpeed</h2>
+                <p>Chưa chạy benchmark nào riêng cho LiteSpeed. Môi trường đo dùng nginx và <code>litespeed-cache</code> chưa được cài.</p>
+                <p>Để benchmark LiteSpeed đúng cách:</p>
+                <ol>
+                    <li>Chuyển sang OpenLiteSpeed (hoặc chạy song song) - page cache và ESI của LiteSpeed là tính năng ở tầng server và sẽ không hoạt động dưới nginx.</li>
+                    <li>Cài <code>litespeed-cache</code> và xác nhận chỉ báo cache hit/miss xuất hiện trong response header.</li>
+                    <li>Chạy lại <code>php benchmarks/bench.php http --runs=5</code> và so median với baseline nginx 996 ms đã ghi ở trên.</li>
+                    <li>Kiểm tra lại phần <code>CACHE / COMPRESSION HEADERS</code>: một lần hit LiteSpeed ấm phải trả về các header cache mà nginx không có.</li>
+                </ol>
+                <blockquote class="rec">
+                    <p>Cho tới khi làm được điều đó, mọi khẳng định về LiteSpeed trong tài liệu này đều chưa được kiểm chứng. Cài <code>litespeed-cache</code> dưới nginx không mang lại page cache đầy đủ.</p>
+                </blockquote>
+
+                <hr>
+                <p style="text-align: center; color: var(--text-muted);">
+                    <a href="./">← Quay Lại Hướng Dẫn Kiểm Thử</a>
+                </p>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

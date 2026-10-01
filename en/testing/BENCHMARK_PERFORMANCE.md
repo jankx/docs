@@ -18,10 +18,11 @@ measures both:
 
 | File | Purpose |
 | --- | --- |
-| `bench.php` | CLI entry point: `probe`, `calls`, `trace`, `http`, `report` |
+| `bench.php` | CLI entry point: `probe`, `calls`, `trace`, `http`, `report`, `graph` |
 | `collect.php` | Boots WordPress inside a child PHP process and emits JSON |
 | `lib/CallProfiler.php` | Spawns the child process under Xdebug, locates output files |
 | `lib/CachegrindParser.php` | Parses Xdebug cachegrind output into a call graph |
+| `lib/FlameGraph.php` | Renders the parsed call graph as a standalone SVG/HTML flame graph |
 
 Artifacts are written to `benchmarks/.work/` and must not be committed.
 
@@ -47,10 +48,38 @@ php benchmarks/bench.php http --runs=5
 
 # Write a JSON report for CI or before/after comparison.
 php benchmarks/bench.php report --scenario=home
+
+# Interactive flame graph (HTML + SVG in benchmarks/report/).
+php benchmarks/bench.php graph --scenario=home
+
+# Re-render an existing capture instead of profiling again.
+php benchmarks/bench.php graph --scenario=home --file=benchmarks/.work/cachegrind_home/jankx_home_28724
 ```
 
 `--scenario` accepts `boot`, `home`, and `page`. `boot` stops after WordPress
 finishes loading; `home` and `page` additionally render the front template.
+
+`--width` sets the SVG pixel width, `--depth` caps how many levels are drawn
+(both default: width 1400, depth 14).
+
+### Reading the flame graph
+
+`graph` writes a self-contained HTML file into `benchmarks/report/` - open it
+directly in a browser, no server needed. Hovering a frame shows the function
+name, its self time, and its call count.
+
+Two properties make the widths worth trusting:
+
+- Every timed function gets exactly one frame, sized by the self time of its own
+  body. Cachegrind aggregates edges by function name, which makes the call graph
+  a DAG rather than a tree; the renderer builds a spanning tree so no function is
+  counted twice.
+- The drawn self times therefore sum exactly to the profiler total. If the header
+  `total inclusive` does not match `calls`' `profiled CPU`, the graph is broken.
+
+Frame width is the subtree's self time, not a single function's inclusive cost.
+A classic stack flame graph is not reproducible from cachegrind data, because the
+capture has no stack ordering.
 
 ### Xdebug
 
@@ -108,6 +137,9 @@ parsed the query.
 | Total call events | 1,307,002 |
 | Profiled CPU time | 11.28 s |
 | Cost unit | 10 ns |
+
+The `graph` command reports the same 11,602.72 ms as `total inclusive`, with 8
+root children and all 5,577 timed functions drawn exactly once.
 
 Top self-time functions:
 
