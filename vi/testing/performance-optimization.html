@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tối Ưu Hiệu Năng Web - Tài liệu Jankx Theme</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --border: rgba(255, 255, 255, 0.1);
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background:
+                radial-gradient(ellipse at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .logo-text { font-weight: 600; }
+
+        nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active { color: var(--primary); }
+
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 48px;
+            padding: 48px 0;
+        }
+
+        .sidebar { position: sticky; top: 120px; align-self: start; }
+
+        .sidebar-section { margin-bottom: 32px; }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .sidebar-links { list-style: none; }
+
+        .sidebar-links li { margin-bottom: 8px; }
+
+        .sidebar-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .sidebar-links a:hover { color: var(--primary); }
+
+        .content h1 {
+            font-size: 2.25rem;
+            margin-bottom: 16px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            margin: 48px 0 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content h3 {
+            font-size: 1.125rem;
+            margin: 32px 0 12px;
+            color: var(--primary);
+        }
+
+        .content p { color: var(--text-secondary); margin-bottom: 16px; }
+
+        .content pre {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .content p code, .content li code, .content td code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--primary);
+        }
+
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.9375rem;
+        }
+
+        .content th, .content td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .content th {
+            background: rgba(255,255,255,0.02);
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content ul, .content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .content li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .content a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .content a:hover { text-decoration: underline; }
+
+        .content blockquote {
+            border-left: 3px solid var(--primary);
+            background: var(--bg-card);
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .content blockquote p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 40px 0;
+        }
+
+        .rec {
+            border-left: 3px solid var(--warning);
+        }
+
+        .ok {
+            border-left: 3px solid var(--success);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-done { background: rgba(16,185,129,0.15); color: var(--success); }
+        .badge-todo { background: rgba(245,158,11,0.15); color: var(--warning); }
+        .badge-no   { background: rgba(239,68,68,0.15);  color: #ef4444; }
+
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            header { position: static; background: var(--bg-dark); }
+            nav { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .content h1 { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../" class="logo">
+                    <span class="logo-icon">J</span>
+                    <span class="logo-text">Jankx Theme</span>
+                </a>
+                <nav>
+                    <a href="./">Tài liệu</a>
+                    <a href="https://github.com/jankx/jankx-lite" target="_blank">GitHub</a>
+                    <a href="../../en/testing/performance-optimization.html" class="lang-switch">🇺🇸 EN</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Tối ưu hiệu năng</p>
+                    <ul class="sidebar-links">
+                        <li><a href="#tong-quan">Tổng quan</a></li>
+                        <li><a href="#ket-qua">Kết quả đã đạt</a></li>
+                        <li><a href="#nguyen-tac">Nguyên tắc đo</a></li>
+                        <li><a href="#nen-tang">Tầng 1: Nén &amp; cache header</a></li>
+                        <li><a href="#php">Tầng 2: PHP runtime</a></li>
+                        <li><a href="#du-lieu">Tầng 3: Truy vấn &amp; object cache</a></li>
+                        <li><a href="#frontend">Tầng 4: Frontend</a></li>
+                        <li><a href="#full-page-cache">Tầng 5: Full-page cache</a></li>
+                        <li><a href="#bai">Bẫy đã gặp</a></li>
+                        <li><a href="#checklist">Checklist</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Khác</p>
+                    <ul class="sidebar-links">
+                        <li><a href="./benchmark-performance.html">Benchmark &amp; Flame Graph</a></li>
+                        <li><a href="./">← Hướng Dẫn Kiểm Thử</a></li>
+                        <li><a href="../getting-started/">Bắt Đầu</a></li>
+                        <li><a href="../layout-system/">Hệ Thống Layout</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="content">
+                <h1>Tối Ưu Hiệu Năng Web</h1>
+                <p>Hướng dẫn thực tế để tăng tốc website WordPress dùng Jankx theme, dựa trên các phép đo thật trên dự án Nobitour. Mọi con số trong tài liệu đều là kết quả đo, không phải ước lượng.</p>
+
+                <h2 id="tong-quan">Tổng quan</h2>
+                <p>Trước khi tối ưu, điều quan trọng nhất là biết trang chậm vì lý do nào. Ba nhóm nguyên nhân phổ biến nhất:</p>
+                <table>
+                    <thead>
+                        <tr><th>Tầng</th><th>Triệu chứng</th><th>Cách kiểm chứng</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Payload</td><td>TTFB nhanh nhưng tải lâu</td><td>So sánh <code>size_download</code> có/không <code>--compressed</code></td></tr>
+                        <tr><td>PHP</td><td>TTFB chiếm gần hết total time</td><td>So <code>time_starttransfer</code> với <code>time_total</code></td></tr>
+                        <tr><td>Mạng</td><td>Chậm ở người dùng, nhanh ở máy bạn</td><td>Đo từ máy khác, không phải localhost</td></tr>
+                    </tbody>
+                </table>
+                <p>Trên localhost, băng thông gần như vô hạn nên tầng mạng bị ẩn đi hoàn toàn. Đó là lý do nhiều tối ưu "không thấy tác dụng" khi đo local nhưng lại tạo khác biệt lớn với người dùng thật.</p>
+
+                <h2 id="ket-qua">Kết quả đã đạt</h2>
+                <table>
+                    <thead>
+                        <tr><th>Hạng mục</th><th>Trước</th><th>Sau</th><th>Trạng thái</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Dung lượng HTML gửi đi</td><td>727.773 bytes</td><td>257.490 bytes</td><td><span class="badge badge-done">DONE</span> giảm 65%</td></tr>
+                        <tr><td>Median latency (warm, local)</td><td>~1.44 s</td><td>~1.25 s</td><td><span class="badge badge-done">DONE</span></td></tr>
+                        <tr><td><code>Content-Encoding: gzip</code></td><td>không có</td><td>có</td><td><span class="badge badge-done">DONE</span></td></tr>
+                        <tr><td><code>Cache-Control</code> (asset)</td><td>không có</td><td>immutable 1 năm</td><td><span class="badge badge-done">DONE</span></td></tr>
+                        <tr><td><code>Cache-Control</code> (HTML)</td><td>không có</td><td>no-store</td><td><span class="badge badge-done">DONE</span></td></tr>
+                        <tr><td>Persistent object cache</td><td>không có</td><td>chưa đặt</td><td><span class="badge badge-todo">TODO</span></td></tr>
+                        <tr><td>Full-page cache</td><td>không có</td><td>chưa đặt</td><td><span class="badge badge-todo">TODO</span></td></tr>
+                        <tr><td>Tắt <code>WP_DEBUG</code> production</td><td><code>true</code></td><td>giữ <code>true</code> (dev)</td><td><span class="badge badge-no">KHÔNG CẦN</span></td></tr>
+                        <tr><td><code>DISABLE_WP_CRON</code></td><td>chưa đặt</td><td>không đặt</td><td><span class="badge badge-no">KHÔNG CẦN</span></td></tr>
+                    </tbody>
+                </table>
+                <blockquote class="rec">
+                    <p>Hai dòng cuối bị đánh dấu "không cần" là kết quả đo thật, không phải suy đoán. Cả hai đều được bật thử, đo lại, rồi hoàn tác vì không cải thiện gì. Chi tiết ở mục <a href="#php">Tầng 2</a>.</p>
+                </blockquote>
+
+                <h2 id="nguyen-tac">Nguyên tắc đo</h2>
+                <ol>
+                    <li><strong>Đo trước khi sửa.</strong> Ghi lại baseline có thể tái lập.</li>
+                    <li><strong>Đo lại cùng cách.</strong> Cùng số lần chạy, cùng điều kiện nhiệt.</li>
+                    <li><strong>Phân biệt latency và payload.</strong> Giảm payload không giảm TTFB, và ngược lại.</li>
+                    <li><strong>Không giữ thay đổi không hiệu quả.</strong> Thêm biến số cho môi trường mà không có lợi ích chỉ làm khó bảo trì.</li>
+                    <li><strong>Đo lại production-like.</strong> Bản đo có Xdebug hoặc <code>WP_DEBUG</code> không đại diện cho người dùng thật.</li>
+                </ol>
+                <pre><code># Latency: chạy nhiều lần, lấy median, bỏ qua lần đầu
+php benchmarks/bench.php http --runs=7
+
+# Xem TTFB so với tổng thời gian
+curl -s -o NUL --compressed -w "ttfb=%{time_starttransfer}s total=%{time_total}s`n" http://nibitour.localhost/
+
+# So payload nén và không nén
+curl -s -o NUL -w "identity: %{size_download} bytes`n" http://nibitour.localhost/
+curl -s -o NUL --compressed -w "gzip    : %{size_download} bytes`n" http://nibitour.localhost/</code></pre>
+
+                <h2 id="nen-tang">Tầng 1: Nén và cache header</h2>
+                <p>Đây là thay đổi rẻ nhất và cho tỷ lệ lớn nhất. Trang homepage render ra 727 KB HTML và gửi đi nguyên trạng. Chỉ riêng việc bật gzip đã giảm 65% dữ liệu truyền.</p>
+
+                <h3>Bật gzip</h3>
+                <p>Mặc định nginx để <code>gzip</code> ở dạng comment. Bỏ comment và thêm các tham số sau vào block <code>http</code>:</p>
+                <pre><code>sendfile        on;
+tcp_nopush      on;
+
+gzip              on;
+gzip_vary         on;
+gzip_proxied      any;
+gzip_comp_level   6;
+gzip_min_length   256;
+gzip_types
+    text/plain
+    text/css
+    text/xml
+    text/javascript
+    application/javascript
+    application/x-javascript
+    application/json
+    application/xml
+    application/rss+xml
+    application/atom+xml
+    image/svg+xml
+    font/ttf
+    font/otf
+    application/vnd.ms-fontobject;
+gzip_disable "msie6";</code></pre>
+
+                <h3>Cache header cho asset tĩnh</h3>
+                <p>Asset build có hash trong tên nên đổi mỗi lần deploy, an toàn để cache cứng:</p>
+                <pre><code>location ~* \.(?:css|js|mjs|woff2?|ttf|otf|eot|svg|png|jpe?g|gif|webp|avif|ico)$ {
+    # KHÔNG dùng `expires` ở đây: nó sẽ sinh thêm header Cache-Control
+    # yếu hơn cạnh header immutable bên dưới.
+    add_header Cache-Control "public, max-age=31536000, immutable" always;
+    access_log off;
+    try_files $uri =404;
+}</code></pre>
+                <blockquote class="ok">
+                    <p>Luôn dùng <code>always</code> trong <code>add_header</code>. Thiếu nó, nginx sẽ bỏ qua header khi response có status như 404 hoặc 304, và bạn mất cache header đúng lúc cần nhất.</p>
+                </blockquote>
+
+                <h3>Không cache HTML</h3>
+                <pre><code>location ~ \.php$ {
+    include snippets/fastcgi-php.conf;
+    fastcgi_pass php_upstream;
+    # Trang cũ còn tệ hơn trang chậm.
+    add_header Cache-Control "no-store, must-revalidate" always;
+}</code></pre>
+
+                <h3>Brotli</h3>
+                <p>Nén tốt hơn gzip thêm 15-20%. nginx chính thức không có Brotli; cần module <code>ngx_brotli</code>. Chỉ làm sau khi gzip đã hoàn tất và đo lại, vì nó thêm một bước cấu hình nữa vào chuỗi đã dễ vỡ.</p>
+
+                <h2 id="php">Tầng 2: PHP runtime</h2>
+
+                <h3>Đo kỹ năng đã bị loại trừ</h3>
+                <p>Ba thay đổi dưới đây là giả thuyết hợp lý, đều đã bật thử và đo lại. Cả ba đều <strong>không cải thiện</strong>, nên đã hoàn tác. Ghi lại ở đây để không ai đo lại lần nữa.</p>
+                <table>
+                    <thead>
+                        <tr><th>Giả thuyết</th><th>Cách kiểm chứng</th><th>Kết quả</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cron loopback làm chậm mỗi request</td>
+                            <td>Thêm <code>DISABLE_WP_CRON</code>, đo lại 6 lần</td>
+                            <td>Không đổi (1.48-1.58 s)</td>
+                        </tr>
+                        <tr>
+                            <td><code>WP_DEBUG</code> gây overhead</td>
+                            <td>Đặt <code>false</code>, đo lại CLI và HTTP</td>
+                            <td>Không đổi (~1.4 s)</td>
+                        </tr>
+                        <tr>
+                            <td>IMAP monitor chạy mỗi request</td>
+                            <td>Liệt kê cron, đo trực tiếp <code>wp-cron.php</code></td>
+                            <td>Chỉ chạy mỗi 5 phút, không nằm trên request path</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Giải thích về <code>curl_exec</code></h3>
+                <p>Trace cho thấy một lời gọi <code>curl_exec</code> (~101 ms) với chuỗi gọi hàm như sau:</p>
+                <pre><code>spawn_cron -> wp_remote_post -> WP_Http->request -> php::curl_exec</code></pre>
+                <p>Đây là WP-Cron tự gọi chính nó qua loopback HTTP. Nhưng chỉ chạy khi có event đủ hạn. Liệt kê 16 event đang lên lịch cho thấy job nặng nhất là IMAP payment monitor ở chu kỳ 5 phút, và không event nào bị trễ.</p>
+                <pre><code>// Liệt kê event và phát hiện event trễ hạn
+php your-script.php
+// output: hook, next run time, interval, cờ [OVERDUE]</code></pre>
+                <blockquote class="rec">
+                    <p>Đừng tắt WP-Cron chỉ vì thấy <code>curl_exec</code> trong profile. Loopback <em>thỉnh thoảng</em> mới chạy không phải chi phí mỗi request. Tắt nó sẽ làm payment monitoring ngừng hoạt động mà không đổi latency.</p>
+                </blockquote>
+
+                <h3>Phân bố thời gian thực tế</h3>
+                <p>Sau khi bật gzip, TTFB là 1.42 s trong tổng 1.46 s. Phần lớn thời gian còn lại nằm ở PHP, không phải truyền dữ liệu. Các hotspot tính theo self time:</p>
+                <table>
+                    <thead>
+                        <tr><th>Hàm</th><th>Self time</th><th>Nhận xét</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>php::curl_exec</code></td><td>101.4 ms</td><td>Cron loopback, không theo request</td></tr>
+                        <tr><td><code>require_once::wp-settings.php</code></td><td>68.6 ms</td><td>Nạp plugin và theme</td></tr>
+                        <tr><td><code>apply_filters</code></td><td>45.6 ms</td><td>Hook chain dài</td></tr>
+                        <tr><td><code>Composer\Autoload\{closure\}</code></td><td>41.9 ms</td><td>Tra cứu filesystem của autoloader</td></tr>
+                        <tr><td><code>_wp_array_get</code></td><td>33.6 ms</td><td>17.753 lần gọi từ <code>WP_Theme_JSON-&gt;merge</code></td></tr>
+                        <tr><td><code>WP_Theme_JSON::sanitize</code></td><td>32.7 ms</td><td>Resolve theme JSON lặp lại</td></tr>
+                        <tr><td><code>php::mysqli_query</code></td><td>26.9 ms</td><td>354 truy vấn</td></tr>
+                        <tr><td><code>php::file_exists</code> + <code>realpath</code></td><td>36.8 ms</td><td>Chủ yếu từ autoloader</td></tr>
+                    </tbody>
+                </table>
+                <p>Phân bố self time theo thành phần:</p>
+                <table>
+                    <thead>
+                        <tr><th>Thành phần</th><th>Self time</th><th>Ghi chú</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>wp-includes</code></td><td>414.3 ms</td><td>Lõi WordPress</td></tr>
+                        <tr><td><code>themes/jankx</code></td><td>293.5 ms</td><td>Parent theme</td></tr>
+                        <tr><td><code>plugins/polylang</code></td><td>242.8 ms</td><td>Plugin dịch thuật</td></tr>
+                        <tr><td>Khác</td><td>136.8 ms</td><td>Composer, filesystem</td></tr>
+                        <tr><td><code>themes/nibitour</code></td><td>72.8 ms</td><td>Child theme</td></tr>
+                    </tbody>
+                </table>
+                <blockquote class="rec">
+                    <p>Hai hotspot lớn nhất nằm ở <code>wp-includes</code> và Polylang, không nằm trong code Jankx. Đây là lý do tối ưu tầng object cache (mục kế) có tác động lớn hơn việc micro-optimize trong theme.</p>
+                </blockquote>
+
+                <h3>OPcache và JIT</h3>
+                <p>Trên môi trường này, OPcache đã bật cùng JIT ở chế độ <code>tracing</code>, dùng file cache trên đĩa:</p>
+                <pre><code>opcache.enable              = 1
+opcache.jit                 = tracing
+opcache.file_cache          = C:/laragon/tmp/opcache
+opcache.max_accelerated_files = 20000
+opcache.validate_timestamps = 1</code></pre>
+                <p>Không cần thay đổi gì ở môi trường local. Trên production nên đặt <code>validate_timestamps=0</code> và deploy bằng cách restart PHP, để bỏ phép stat file trên mọi request.</p>
+
+                <h3>Số file PHP được nạp</h3>
+                <p>Boot nạp 1.396 file:</p>
+                <table>
+                    <thead>
+                        <tr><th>Nhóm</th><th>Số file</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>wp-includes</code></td><td>480</td></tr>
+                        <tr><td><code>themes/nibitour</code></td><td>401</td></tr>
+                        <tr><td><code>themes/jankx</code></td><td>368</td></tr>
+                        <tr><td><code>plugins/polylang</code></td><td>139</td></tr>
+                    </tbody>
+                </table>
+                <p>769 file thuộc hai theme là con số lớn. Tách phần không dùng ở frontend sang autoload theo yêu cầu sẽ giảm đáng kể. Tuy nhiên cần đo lại qua HTTP trước khi kết luận, vì số đo boot bằng CLI không phản ánh đúng đường production.</p>
+
+                <h2 id="du-lieu">Tầng 3: Truy vấn và object cache</h2>
+                <p>Trang homepage chạy 354 truy vấn, trong đó nhiều truy vấn trùng lặp cấu trúc:</p>
+                <table>
+                    <thead>
+                        <tr><th>Loại truy vấn</th><th>Số lần</th><th>Ghi chú</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>SELECT * FROM wp_posts WHERE ID = ?</code></td><td>46</td><td>Warm post cache loại bỏ gần hết</td></tr>
+                        <tr><td><code>SELECT option_name, option_value FROM wp_options</code></td><td>52</td><td>Giống hệt nhau, từ <code>get_option</code></td></tr>
+                        <tr><td><code>SELECT FOUND_ROWS()</code></td><td>17</td><td>Từ phân trang</td></tr>
+                    </tbody>
+                </table>
+                <p>Object cache bền vững (Redis hoặc Memcached) xử lý cả hai nhóm trên cùng lúc. Đây là thay đổi tác động lớn nhất còn lại ở tầng PHP.</p>
+
+                <h3>Redis trên môi trường này</h3>
+                <p>Redis đã có sẵn ở <code>C:\laragon\bin\redis\redis-x64-5.0.14.1</code>, nhưng PHP chưa có extension tương ứng:</p>
+                <pre><code># Kiểm tra extension
+php -r "echo extension_loaded('redis') ? 'yes' : 'no';"
+# -> no
+
+# Thư mục extension hiện có
+php -i | Select-String "extension_dir"
+# -> 41 file dll, không có redis.dll</code></pre>
+                <p>Cần bật extension <code>redis</code> cho PHP rồi khai báo trong <code>wp-config.php</code>:</p>
+                <pre><code>define('WP_REDIS_HOST', '127.0.0.1');
+define('WP_REDIS_PORT', 6379);</code></pre>
+                <p>Đây là thay đổi môi trường, cần xác nhận trước khi thực hiện. Object cache không bền vững là nguyên nhân gốc của cả 46 truy vấn post lặp lại lẫn 52 truy vấn option lặp lại.</p>
+
+                <h2 id="frontend">Tầng 4: Frontend</h2>
+                <p>Sau khi server đã nén, các việc còn lại nằm ở trình duyệt:</p>
+                <table>
+                    <thead>
+                        <tr><th>Việc</th><th>Cách làm</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Render-blocking CSS/JS</td><td>Trì hoãn script không cần thiết, dùng <code>defer</code>/<code>async</code></td></tr>
+                        <tr><td>Ảnh thiếu kích thước</td><td>Luôn khai báo <code>width</code>/<code>height</code> để tránh layout shift</td></tr>
+                        <tr><td>Font chặn render</td><td><code>font-display: swap</code> và preload</td></tr>
+                        <tr><td>Third-party script</td><td>Defer, hoặc load sau tương tác</td></tr>
+                    </tbody>
+                </table>
+
+                <h2 id="full-page-cache">Tầng 5: Full-page cache</h2>
+                <p>Đây là bước có tác động lớn nhất cho người dùng thật: HTML được sinh sẵn, PHP không được gọi cho lượt xem cache hit.</p>
+                <blockquote class="rec">
+                    <p>Môi trường hiện tại chạy nginx. Page cache và ESI là tính năng tầng server của LiteSpeed và sẽ không hoạt động dưới nginx. Cài <code>litespeed-cache</code> dưới nginx không mang lại full-page cache.</p>
+                </blockquote>
+                <p>Hai lựa chọn thực tế:</p>
+                <ol>
+                    <li>Chuyển sang OpenLiteSpeed, dùng <code>litespeed-cache</code>. Phù hợp nhất nếu hosting hỗ trợ.</li>
+                    <li>Giữ nginx, dùng plugin full-page cache ở tầng WordPress. Đơn giản hơn khi chuyển đổi không thuận lợi, nhưng kém hiệu quả hơn vì vẫn phải nạp PHP.</li>
+                </ol>
+                <p>Sau khi đặt, xác minh bằng header <code>X-LiteSpeed-Cache</code> hoặc <code>X-Cache</code> rồi đo lại:</p>
+                <pre><code>curl -s -D - -o NUL http://nibitour.localhost/ | Select-String "X-LiteSpeed-Cache|X-Cache"</code></pre>
+
+                <h2 id="bai">Bẫy đã gặp</h2>
+                <p>Các lỗi dưới đây đều đã xảy ra trong quá trình áp dụng và đều dễ mắc lại.</p>
+
+                <h3>Reload nhưng config không được áp dụng</h3>
+                <p><code>nginx -s reload</code> bắn signal vào pid trong file <code>logs/nginx.pid</code>. Nếu master process đang chạy không trùng pid đó, lệnh báo thành công nhưng config không bao giờ được nạp, và bạn debug nhầm hướng suốt.</p>
+                <pre><code># Master nào thực sự đang listen?
+Get-NetTCPConnection -LocalPort 80 -State Listen | ForEach-Object { $_.OwningProcess }
+
+# So với pid trong file
+Get-Content C:\laragon\bin\nginx\nginx-1.28.2\logs\nginx.pid</code></pre>
+                <p>Luôn xác minh header sau khi reload. Nếu header mong muốn không xuất hiện, đừng đi sâu hơn vào cấu hình nữa.</p>
+
+                <h3>Hai header Cache-Control xung đột</h3>
+                <p><code>expires 1y;</code> tự sinh header <code>Cache-Control: max-age=31536000</code>. Thêm <code>add_header Cache-Control "...immutable"</code> cạnh nó tạo ra hai header cùng tên, và giá trị nào được áp dụng là không đoán trước được. Dùng <code>add_header</code> một mình.</p>
+
+                <h3>Trùng location PHP</h3>
+                <p>Thêm một <code>location ~* \.php$</code> thứ hai trong khi block <code>location ~ \.php$</code> cũ vẫn còn sẽ khiến block đầu tiên được dùng và block mới bị bỏ qua âm thầm. <code>nginx -t</code> vẫn báo thành công. Gộp vào một block duy nhất.</p>
+
+                <h3>Đo localhost và kết luận về mạng</h3>
+                <p>Loopback không có độ trễ và băng thông gần như vô hạn. Một thay đổi giảm 65% payload sẽ không thấy tác dụng gì trên localhost nhưng rất có tác dụng với người dùng thật. Đừng bác bỏ tối ưu payload chỉ vì latency local không đổi.</p>
+
+                <h2 id="checklist">Checklist</h2>
+                <p>Thứ tự đề xuất, mỗi bước đo lại trước khi sang bước sau:</p>
+                <table>
+                    <thead>
+                        <tr><th>#</th><th>Bước</th><th>Trạng thái</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>Ghi baseline: latency, TTFB, payload, số query</td><td>Xong</td></tr>
+                        <tr><td>2</td><td>Bật gzip + cache header ở tầng server</td><td>Xong</td></tr>
+                        <tr><td>3</td><td>Xác minh header thực sự xuất hiện</td><td>Xong</td></tr>
+                        <tr><td>4</td><td>Đặt persistent object cache (Redis)</td><td>Chờ duyệt</td></tr>
+                        <tr><td>5</td><td>Đặt full-page cache</td><td>Chờ duyệt</td></tr>
+                        <tr><td>6</td><td>Giảm script chặn render ở frontend</td><td>Chưa làm</td></tr>
+                        <tr><td>7</td><td>Giảm số file theme nạp ở frontend</td><td>Chưa làm</td></tr>
+                        <tr><td>8</td><td>Đo lại toàn bộ và so với baseline</td><td>Chờ các bước trên</td></tr>
+                    </tbody>
+                </table>
+                <blockquote class="ok">
+                    <p>Bước 2 đã cho phần lớn cải thiện với chi phí gần như bằng không, và không đụng tới code theme. Các bước 4 và 5 cần thay đổi hạ tầng nên cần quyết định trước khi thực hiện.</p>
+                </blockquote>
+
+                <hr>
+                <p style="text-align: center; color: var(--text-muted);">
+                    <a href="./benchmark-performance.html">Đọc tiếp: Benchmark &amp; Flame Graph →</a>
+                </p>
+                <p style="text-align: center; color: var(--text-muted);">
+                    <a href="./">← Quay Lại Hướng Dẫn Kiểm Thử</a>
+                </p>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

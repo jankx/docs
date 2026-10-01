@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Performance Optimization - Jankx Theme Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --border: rgba(255, 255, 255, 0.1);
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background:
+                radial-gradient(ellipse at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(118, 75, 162, 0.15) 0%, transparent 50%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .logo-text { font-weight: 600; }
+
+        nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active { color: var(--primary); }
+
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 48px;
+            padding: 48px 0;
+        }
+
+        .sidebar { position: sticky; top: 120px; align-self: start; }
+
+        .sidebar-section { margin-bottom: 32px; }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .sidebar-links { list-style: none; }
+
+        .sidebar-links li { margin-bottom: 8px; }
+
+        .sidebar-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .sidebar-links a:hover { color: var(--primary); }
+
+        .content h1 {
+            font-size: 2.25rem;
+            margin-bottom: 16px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            margin: 48px 0 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content h3 {
+            font-size: 1.125rem;
+            margin: 32px 0 12px;
+            color: var(--primary);
+        }
+
+        .content p { color: var(--text-secondary); margin-bottom: 16px; }
+
+        .content pre {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .content p code, .content li code, .content td code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--primary);
+        }
+
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.9375rem;
+        }
+
+        .content th, .content td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .content th {
+            background: rgba(255,255,255,0.02);
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content ul, .content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .content li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .content a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .content a:hover { text-decoration: underline; }
+
+        .content blockquote {
+            border-left: 3px solid var(--primary);
+            background: var(--bg-card);
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .content blockquote p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 40px 0;
+        }
+
+        .rec {
+            border-left: 3px solid var(--warning);
+        }
+
+        .ok {
+            border-left: 3px solid var(--success);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-done { background: rgba(16,185,129,0.15); color: var(--success); }
+        .badge-todo { background: rgba(245,158,11,0.15); color: var(--warning); }
+        .badge-no   { background: rgba(239,68,68,0.15);  color: #ef4444; }
+
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            header { position: static; background: var(--bg-dark); }
+            nav { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .content h1 { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../" class="logo">
+                    <span class="logo-icon">J</span>
+                    <span class="logo-text">Jankx Theme</span>
+                </a>
+                <nav>
+                    <a href="./">Docs</a>
+                    <a href="https://github.com/jankx/jankx-lite" target="_blank">GitHub</a>
+                    <a href="../../vi/testing/performance-optimization.html" class="lang-switch">🇻🇳 VI</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <p class="sidebar-title">Performance</p>
+                    <ul class="sidebar-links">
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#results">Measured results</a></li>
+                        <li><a href="#principles">Measurement rules</a></li>
+                        <li><a href="#tier1">Tier 1: Compression &amp; cache headers</a></li>
+                        <li><a href="#php">Tier 2: PHP runtime</a></li>
+                        <li><a href="#data">Tier 3: Queries &amp; object cache</a></li>
+                        <li><a href="#frontend">Tier 4: Frontend</a></li>
+                        <li><a href="#full-page-cache">Tier 5: Full-page cache</a></li>
+                        <li><a href="#pitfalls">Pitfalls hit</a></li>
+                        <li><a href="#checklist">Checklist</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <p class="sidebar-title">More</p>
+                    <ul class="sidebar-links">
+                        <li><a href="./benchmark-performance.html">Benchmark &amp; Flame Graph</a></li>
+                        <li><a href="./">← Testing Guide</a></li>
+                        <li><a href="../getting-started/">Getting Started</a></li>
+                        <li><a href="../layout-system/">Layout System</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="content">
+                <h1>Web Performance Optimization</h1>
+                <p>A practical guide to speeding up a WordPress site running the Jankx theme, based on real measurements taken on the Nobitour project. Every number in this document is a measured result, not an estimate.</p>
+
+                <h2 id="overview">Overview</h2>
+                <p>Before optimizing, the important thing is knowing <em>why</em> a page is slow. Three groups of causes are most common:</p>
+                <table>
+                    <thead>
+                        <tr><th>Tier</th><th>Symptom</th><th>How to verify</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Payload</td><td>Fast TTFB but slow load</td><td>Compare <code>size_download</code> with and without <code>--compressed</code></td></tr>
+                        <tr><td>PHP</td><td>TTFB accounts for nearly all total time</td><td>Compare <code>time_starttransfer</code> against <code>time_total</code></td></tr>
+                        <tr><td>Network</td><td>Slow for users, fast on your machine</td><td>Measure from a different machine, not localhost</td></tr>
+                    </tbody>
+                </table>
+                <p>On localhost, bandwidth is effectively infinite, so the network tier is completely hidden. This is why many optimizations appear to do nothing when measured locally while making a large difference to real users.</p>
+
+                <h2 id="results">Measured results</h2>
+                <table>
+                    <thead>
+                        <tr><th>Item</th><th>Before</th><th>After</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>HTML transferred</td><td>727,773 bytes</td><td>257,490 bytes</td><td><span class="badge badge-done">DONE</span> 65% smaller</td></tr>
+                        <tr><td>Median latency (warm, local)</td><td>~1.44 s</td><td>~1.25 s</td><td><span class="badge badge-done">DONE</span></td></tr>
+                        <tr><td><code>Content-Encoding: gzip</code></td><td>absent</td><td>present</td><td><span class="badge badge-done">DONE</span></td></tr>
+                        <tr><td><code>Cache-Control</code> (assets)</td><td>absent</td><td>immutable 1 year</td><td><span class="badge badge-done">DONE</span></td></tr>
+                        <tr><td><code>Cache-Control</code> (HTML)</td><td>absent</td><td>no-store</td><td><span class="badge badge-done">DONE</span></td></tr>
+                        <tr><td>Persistent object cache</td><td>absent</td><td>not deployed</td><td><span class="badge badge-todo">TODO</span></td></tr>
+                        <tr><td>Full-page cache</td><td>absent</td><td>not deployed</td><td><span class="badge badge-todo">TODO</span></td></tr>
+                        <tr><td>Disable <code>WP_DEBUG</code> in production</td><td><code>true</code></td><td>kept <code>true</code> (dev)</td><td><span class="badge badge-no">NOT NEEDED</span></td></tr>
+                        <tr><td><code>DISABLE_WP_CRON</code></td><td>not set</td><td>not set</td><td><span class="badge badge-no">NOT NEEDED</span></td></tr>
+                    </tbody>
+                </table>
+                <blockquote class="rec">
+                    <p>The last two rows marked "not needed" are measured results, not assumptions. Both were enabled, re-measured, and reverted because neither helped. Details in <a href="#php">Tier 2</a>.</p>
+                </blockquote>
+
+                <h2 id="principles">Measurement rules</h2>
+                <ol>
+                    <li><strong>Measure before changing.</strong> Record a baseline you can reproduce.</li>
+                    <li><strong>Re-measure the same way.</strong> Same run count, same warm conditions.</li>
+                    <li><strong>Separate latency from payload.</strong> Shrinking payload does not reduce TTFB, and vice versa.</li>
+                    <li><strong>Do not keep changes that do not help.</strong> A variable added for no gain is pure maintenance burden.</li>
+                    <li><strong>Re-measure production-like.</strong> Numbers taken with Xdebug or <code>WP_DEBUG</code> on do not represent real users.</li>
+                </ol>
+                <pre><code># Latency: run repeatedly, take the median, discard the first
+php benchmarks/bench.php http --runs=7
+
+# Compare TTFB against total time
+curl -s -o NUL --compressed -w "ttfb=%{time_starttransfer}s total=%{time_total}s`n" http://nibitour.localhost/
+
+# Compare compressed and uncompressed payload
+curl -s -o NUL -w "identity: %{size_download} bytes`n" http://nibitour.localhost/
+curl -s -o NUL --compressed -w "gzip    : %{size_download} bytes`n" http://nibitour.localhost/</code></pre>
+
+                <h2 id="tier1">Tier 1: Compression and cache headers</h2>
+                <p>This is the cheapest change with the largest ratio. The homepage renders 727 KB of HTML and was sending it uncompressed. Enabling gzip alone cut the transferred data by 65%.</p>
+
+                <h3>Enable gzip</h3>
+                <p>nginx ships with <code>gzip</code> commented out. Uncomment it and add these settings to the <code>http</code> block:</p>
+                <pre><code>sendfile        on;
+tcp_nopush      on;
+
+gzip              on;
+gzip_vary         on;
+gzip_proxied      any;
+gzip_comp_level   6;
+gzip_min_length   256;
+gzip_types
+    text/plain
+    text/css
+    text/xml
+    text/javascript
+    application/javascript
+    application/x-javascript
+    application/json
+    application/xml
+    application/rss+xml
+    application/atom+xml
+    image/svg+xml
+    font/ttf
+    font/otf
+    application/vnd.ms-fontobject;
+gzip_disable "msie6";</code></pre>
+
+                <h3>Cache headers for static assets</h3>
+                <p>Build assets carry a hash in their filename and change on every deploy, so a hard cache is safe:</p>
+                <pre><code>location ~* \.(?:css|js|mjs|woff2?|ttf|otf|eot|svg|png|jpe?g|gif|webp|avif|ico)$ {
+    # Do NOT use `expires` here: it emits an additional Cache-Control
+    # header that is weaker than the immutable one below.
+    add_header Cache-Control "public, max-age=31536000, immutable" always;
+    access_log off;
+    try_files $uri =404;
+}</code></pre>
+                <blockquote class="ok">
+                    <p>Always use <code>always</code> in <code>add_header</code>. Without it nginx drops the header on responses such as 404 or 304, losing the cache header exactly when you need it.</p>
+                </blockquote>
+
+                <h3>Do not cache HTML</h3>
+                <pre><code>location ~ \.php$ {
+    include snippets/fastcgi-php.conf;
+    fastcgi_pass php_upstream;
+    # A stale page is worse than a slow page.
+    add_header Cache-Control "no-store, must-revalidate" always;
+}</code></pre>
+
+                <h3>Brotli</h3>
+                <p>Compresses 15-20% better than gzip. Official nginx has no Brotli; it requires the <code>ngx_brotli</code> module. Only do this after gzip is done and re-measured, because it adds another configuration step to an already fragile chain.</p>
+
+                <h2 id="php">Tier 2: PHP runtime</h2>
+
+                <h3>Assumptions already ruled out</h3>
+                <p>The three changes below are all plausible hypotheses. Each was enabled, measured, and found to make <strong>no difference</strong>, so all were reverted. They are recorded here so nobody measures them again.</p>
+                <table>
+                    <thead>
+                        <tr><th>Hypothesis</th><th>How it was tested</th><th>Result</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cron loopback slows every request</td>
+                            <td>Added <code>DISABLE_WP_CRON</code>, measured 6 runs</td>
+                            <td>No change (1.48-1.58 s)</td>
+                        </tr>
+                        <tr>
+                            <td><code>WP_DEBUG</code> causes overhead</td>
+                            <td>Set to <code>false</code>, measured CLI and HTTP</td>
+                            <td>No change (~1.4 s)</td>
+                        </tr>
+                        <tr>
+                            <td>IMAP monitor runs per request</td>
+                            <td>Listed cron events, timed <code>wp-cron.php</code> directly</td>
+                            <td>Runs every 5 minutes, not on the request path</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Explaining the <code>curl_exec</code> hotspot</h3>
+                <p>The trace shows a single <code>curl_exec</code> call (~101 ms) with this call chain:</p>
+                <pre><code>spawn_cron -> wp_remote_post -> WP_Http->request -> php::curl_exec</code></pre>
+                <p>This is WP-Cron calling itself over HTTP loopback. But it only runs when an event is due. Listing the 16 scheduled events shows the heaviest job is the IMAP payment monitor on a 5-minute interval, and no event is overdue.</p>
+                <pre><code>// List events and flag overdue ones
+php your-script.php
+// output: hook, next run time, interval, [OVERDUE] flag</code></pre>
+                <blockquote class="rec">
+                    <p>Do not disable WP-Cron just because you see <code>curl_exec</code> in a profile. An <em>intermittent</em> loopback is not a per-request cost. Disabling it breaks payment monitoring without changing latency.</p>
+                </blockquote>
+
+                <h3>Actual time distribution</h3>
+                <p>After enabling gzip, TTFB is 1.42 s out of 1.46 s total. Most of the remaining time is PHP, not data transfer. Hotspots by self time:</p>
+                <table>
+                    <thead>
+                        <tr><th>Function</th><th>Self time</th><th>Note</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>php::curl_exec</code></td><td>101.4 ms</td><td>Cron loopback, not per request</td></tr>
+                        <tr><td><code>require_once::wp-settings.php</code></td><td>68.6 ms</td><td>Loading plugins and themes</td></tr>
+                        <tr><td><code>apply_filters</code></td><td>45.6 ms</td><td>Long hook chain</td></tr>
+                        <tr><td><code>Composer\Autoload\{closure\}</code></td><td>41.9 ms</td><td>Autoloader filesystem lookups</td></tr>
+                        <tr><td><code>_wp_array_get</code></td><td>33.6 ms</td><td>17,753 calls from <code>WP_Theme_JSON-&gt;merge</code></td></tr>
+                        <tr><td><code>WP_Theme_JSON::sanitize</code></td><td>32.7 ms</td><td>Repeated theme JSON resolution</td></tr>
+                        <tr><td><code>php::mysqli_query</code></td><td>26.9 ms</td><td>354 queries</td></tr>
+                        <tr><td><code>php::file_exists</code> + <code>realpath</code></td><td>36.8 ms</td><td>Mostly from the autoloader</td></tr>
+                    </tbody>
+                </table>
+                <p>Self time by component:</p>
+                <table>
+                    <thead>
+                        <tr><th>Component</th><th>Self time</th><th>Note</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>wp-includes</code></td><td>414.3 ms</td><td>WordPress core</td></tr>
+                        <tr><td><code>themes/jankx</code></td><td>293.5 ms</td><td>Parent theme</td></tr>
+                        <tr><td><code>plugins/polylang</code></td><td>242.8 ms</td><td>Translation plugin</td></tr>
+                        <tr><td>Other</td><td>136.8 ms</td><td>Composer, filesystem</td></tr>
+                        <tr><td><code>themes/nibitour</code></td><td>72.8 ms</td><td>Child theme</td></tr>
+                    </tbody>
+                </table>
+                <blockquote class="rec">
+                    <p>The two largest hotspots live in <code>wp-includes</code> and Polylang, not in Jankx code. That is why optimizing the object cache tier below has more impact than micro-optimizing inside the theme.</p>
+                </blockquote>
+
+                <h3>OPcache and JIT</h3>
+                <p>On this environment OPcache is already enabled together with JIT in <code>tracing</code> mode, using an on-disk file cache:</p>
+                <pre><code>opcache.enable              = 1
+opcache.jit                 = tracing
+opcache.file_cache          = C:/laragon/tmp/opcache
+opcache.max_accelerated_files = 20000
+opcache.validate_timestamps = 1</code></pre>
+                <p>No change is needed locally. In production, set <code>validate_timestamps=0</code> and deploy by restarting PHP, which removes the per-request file stat calls.</p>
+
+                <h3>PHP files loaded at boot</h3>
+                <p>Boot loads 1,396 files:</p>
+                <table>
+                    <thead>
+                        <tr><th>Group</th><th>Files</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>wp-includes</code></td><td>480</td></tr>
+                        <tr><td><code>themes/nibitour</code></td><td>401</td></tr>
+                        <tr><td><code>themes/jankx</code></td><td>368</td></tr>
+                        <tr><td><code>plugins/polylang</code></td><td>139</td></tr>
+                    </tbody>
+                </table>
+                <p>769 files across the two themes is a large number. Moving frontend-unused code behind on-demand autoloading would reduce it meaningfully. Re-measure over HTTP before concluding, since a CLI boot measurement does not reflect the production path.</p>
+
+                <h2 id="data">Tier 3: Queries and object cache</h2>
+                <p>The homepage runs 354 queries, many of them structurally duplicated:</p>
+                <table>
+                    <thead>
+                        <tr><th>Query</th><th>Count</th><th>Note</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>SELECT * FROM wp_posts WHERE ID = ?</code></td><td>46</td><td>A warm post cache removes nearly all</td></tr>
+                        <tr><td><code>SELECT option_name, option_value FROM wp_options</code></td><td>52</td><td>Identical, from <code>get_option</code></td></tr>
+                        <tr><td><code>SELECT FOUND_ROWS()</code></td><td>17</td><td>From pagination</td></tr>
+                    </tbody>
+                </table>
+                <p>A persistent object cache (Redis or Memcached) addresses both groups at once. This is the largest remaining PHP-level change.</p>
+
+                <h3>Redis on this environment</h3>
+                <p>Redis is already available at <code>C:\laragon\bin\redis\redis-x64-5.0.14.1</code>, but PHP has no matching extension:</p>
+                <pre><code># Check the extension
+php -r "echo extension_loaded('redis') ? 'yes' : 'no';"
+# -> no
+
+# Current extension directory
+php -i | Select-String "extension_dir"
+# -> 41 dll files, no redis.dll</code></pre>
+                <p>The <code>redis</code> extension must be enabled for PHP, then declared in <code>wp-config.php</code>:</p>
+                <pre><code>define('WP_REDIS_HOST', '127.0.0.1');
+define('WP_REDIS_PORT', 6379);</code></pre>
+                <p>This is an environment change and needs sign-off before proceeding. The lack of a persistent object cache is the root cause of both the 46 repeated post queries and the 52 repeated option queries.</p>
+
+                <h2 id="frontend">Tier 4: Frontend</h2>
+                <p>Once the server is compressing, what remains is browser-side:</p>
+                <table>
+                    <thead>
+                        <tr><th>Task</th><th>Approach</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Render-blocking CSS/JS</td><td>Defer non-critical scripts, use <code>defer</code>/<code>async</code></td></tr>
+                        <tr><td>Images without dimensions</td><td>Always declare <code>width</code>/<code>height</code> to avoid layout shift</td></tr>
+                        <tr><td>Render-blocking fonts</td><td><code>font-display: swap</code> plus preload</td></tr>
+                        <tr><td>Third-party scripts</td><td>Defer, or load after interaction</td></tr>
+                    </tbody>
+                </table>
+
+                <h2 id="full-page-cache">Tier 5: Full-page cache</h2>
+                <p>This is the single biggest win for real users: HTML is pre-generated and PHP is not invoked at all on a cache hit.</p>
+                <blockquote class="rec">
+                    <p>The current environment runs nginx. Page cache and ESI are server-tier LiteSpeed features and will not work under nginx. Installing <code>litespeed-cache</code> under nginx does not give you full-page caching.</p>
+                </blockquote>
+                <p>Two realistic options:</p>
+                <ol>
+                    <li>Move to OpenLiteSpeed with <code>litespeed-cache</code>. Best option if the host supports it.</li>
+                    <li>Stay on nginx with a WordPress full-page cache plugin. Simpler when migration is impractical, but less effective because PHP still loads.</li>
+                </ol>
+                <p>Once deployed, verify with the <code>X-LiteSpeed-Cache</code> or <code>X-Cache</code> header and re-measure:</p>
+                <pre><code>curl -s -D - -o NUL http://nibitour.localhost/ | Select-String "X-LiteSpeed-Cache|X-Cache"</code></pre>
+
+                <h2 id="pitfalls">Pitfalls hit</h2>
+                <p>All of the following actually occurred while applying these changes, and all are easy to repeat.</p>
+
+                <h3>Reload succeeded but the config never applied</h3>
+                <p><code>nginx -s reload</code> signals the PID in <code>logs/nginx.pid</code>. If the master actually listening is a different process, the command reports success while the config is never loaded, and you debug the wrong thing.</p>
+                <pre><code># Which master is really listening?
+Get-NetTCPConnection -LocalPort 80 -State Listen | ForEach-Object { $_.OwningProcess }
+
+# Compare against the pid file
+Get-Content C:\laragon\bin\nginx\nginx-1.28.2\logs\nginx.pid</code></pre>
+                <p>Always verify headers after a reload. If the expected header does not appear, do not go deeper into the configuration.</p>
+
+                <h3>Two conflicting Cache-Control headers</h3>
+                <p><code>expires 1y;</code> emits its own <code>Cache-Control: max-age=31536000</code>. Adding <code>add_header Cache-Control "...immutable"</code> beside it produces two headers with the same name, and which one wins is not predictable. Use <code>add_header</code> alone.</p>
+
+                <h3>Duplicate PHP location</h3>
+                <p>Adding a second <code>location ~* \.php$</code> while an existing <code>location ~ \.php$</code> remains makes the first block win and the new one silently ignored. <code>nginx -t</code> still reports success. Merge into one block.</p>
+
+                <h3>Measuring on localhost and generalizing to the network</h3>
+                <p>Loopback has no latency and effectively infinite bandwidth. A change that cuts payload 65% may show no local latency change while mattering a great deal to real users. Do not dismiss a payload optimization because local latency did not move.</p>
+
+                <h2 id="checklist">Checklist</h2>
+                <p>Recommended order, re-measuring after each step before moving on:</p>
+                <table>
+                    <thead>
+                        <tr><th>#</th><th>Step</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>Record baseline: latency, TTFB, payload, query count</td><td>Done</td></tr>
+                        <tr><td>2</td><td>Enable gzip and cache headers at the server tier</td><td>Done</td></tr>
+                        <tr><td>3</td><td>Verify the headers actually appear</td><td>Done</td></tr>
+                        <tr><td>4</td><td>Deploy persistent object cache (Redis)</td><td>Needs approval</td></tr>
+                        <tr><td>5</td><td>Deploy full-page cache</td><td>Needs approval</td></tr>
+                        <tr><td>6</td><td>Reduce render-blocking frontend scripts</td><td>Not started</td></tr>
+                        <tr><td>7</td><td>Reduce theme files loaded on the frontend</td><td>Not started</td></tr>
+                        <tr><td>8</td><td>Re-measure everything and compare against baseline</td><td>Pending the above</td></tr>
+                    </tbody>
+                </table>
+                <blockquote class="ok">
+                    <p>Step 2 produced most of the improvement at close to zero cost and without touching theme code. Steps 4 and 5 require infrastructure changes and need a decision before proceeding.</p>
+                </blockquote>
+
+                <hr>
+                <p style="text-align: center; color: var(--text-muted);">
+                    <a href="./benchmark-performance.html">Read next: Benchmark &amp; Flame Graph →</a>
+                </p>
+                <p style="text-align: center; color: var(--text-muted);">
+                    <a href="./">← Back to Testing Guide</a>
+                </p>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
