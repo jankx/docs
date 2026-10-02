@@ -326,6 +326,7 @@
                     <ul class="sidebar-links">
                         <li><a href="#why">Why this exists</a></li>
                         <li><a href="#tooling">Tooling</a></li>
+                        <li><a href="#diagnostics">Diagnostic tools</a></li>
                         <li><a href="#flamegraph">Reading the flame graph</a></li>
                         <li><a href="#baseline">Baseline</a></li>
                         <li><a href="#findings">Findings</a></li>
@@ -369,6 +370,9 @@
                         <tr><td><code>lib/CallProfiler.php</code></td><td>Spawns the child process under Xdebug, locates output files</td></tr>
                         <tr><td><code>lib/CachegrindParser.php</code></td><td>Parses Xdebug cachegrind output into a call graph</td></tr>
                         <tr><td><code>lib/FlameGraph.php</code></td><td>Renders the parsed call graph as a standalone SVG/HTML flame graph</td></tr>
+                        <tr><td><code>lib/analyze_existing.php</code></td><td>Analyses an existing cachegrind capture, no server needed</td></tr>
+                        <tr><td><code>lib/who_calls.php</code></td><td>Shows which functions call a given hotspot</td></tr>
+                        <tr><td><code>lib/find_duplicate_queries.php</code></td><td>Finds repeated SQL and attributes it to a real call site</td></tr>
                     </tbody>
                 </table>
                 <p>Artifacts are written to <code>benchmarks/.work/</code> and must not be committed.</p>
@@ -409,6 +413,48 @@ php benchmarks/bench.php graph --scenario=home --file=benchmarks/.work/cachegrin
                     <li>Xdebug writes <code>positions: line</code>, which prepends a source-line column to each cost line. Reading that column as the time cost inflates durations again.</li>
                 </ul>
                 <p><code>cost unit</code> is printed in the <code>calls</code> output so the conversion is verifiable. Always sanity-check it against the reported <code>WP wall time</code>.</p>
+
+                <h2 id="diagnostics">Diagnostic tools</h2>
+                <p>The three scripts below reuse the same parser as <code>bench.php</code> but split the investigation into separate steps. They complement <code>calls</code> rather than replace it: <code>calls</code> answers "where does the time go", these answer "who called it" and "which SQL is wasted".</p>
+
+                <h3>Analyse an existing capture (no server required)</h3>
+                <p><code>bench.php calls</code> always re-runs the collector, so it needs Xdebug and a live web server. Once cachegrind files exist under <code>benchmarks/.work/</code>, they can be re-analysed offline:</p>
+                <pre><code># Every file under .work/cachegrind_*
+php benchmarks/lib/analyze_existing.php
+
+# One specific file
+php benchmarks/lib/analyze_existing.php benchmarks/.work/cachegrind_home/jankx_home_23280</code></pre>
+                <p>It prints three blocks: top self time, top call count, and DB/cache-related functions. A home-page capture is around 90 MB, so each run takes 20&ndash;30 seconds to parse.</p>
+
+                <h3>Find what calls a hotspot</h3>
+                <p>Cachegrind is unreliable about a function's file: when Xdebug reuses a name id, the file attribute drifts to the <em>caller</em>'s context. <code>WP_Scripts::get_highest_fetchpriority_with_dependents</code>, for example, gets stamped with the name of a completely unrelated class. Walk the call graph instead of reading that column:</p>
+                <pre><code>php benchmarks/lib/who_calls.php benchmarks/.work/cachegrind_home/jankx_home_23280</code></pre>
+                <p>It prints up to 8 direct callers for each hotspot in a fixed target list (including <code>apply_filters</code>, <code>get_option</code>, <code>wpdb-&gt;query</code>, <code>WP_Query-&gt;query</code>, and so on).</p>
+
+                <h3>Find repeated SQL</h3>
+                <p>This one needs no Xdebug, only <code>SAVEQUERIES</code>:</p>
+                <pre><code>php benchmarks/lib/find_duplicate_queries.php
+
+# Inspect the raw structure of any logged query
+JANKX_DEBUG_ROW=120 php benchmarks/lib/find_duplicate_queries.php</code></pre>
+                <p>Run it from the theme directory; no server and no Xdebug needed. It builds a browser-like request context, boots WordPress, renders the front template, then reads <code>$wpdb-&gt;queries</code>.</p>
+                <p><strong>The important part:</strong> the output is split into two groups, and reading them correctly is the whole point of the tool.</p>
+                <ul>
+                    <li><strong>Exactly repeated</strong> - the identical SQL statement ran multiple times. This is genuine waste and this is what you should go fix.</li>
+                    <li><strong>Same-shape different-params</strong> - the same statement shape with different parameters (different IDs/terms). This is normal batched access, <em>not</em> waste. The "redundant ms" column for this group is just volume, not time you can save.</li>
+                </ul>
+                <p>Do not trust the "redundant" figure printed by <code>collect.php</code>: it collapses literals, so 52 distinct options get merged into one group and the number overshoots. Use the caller column this script prints instead.</p>
+                <p>The caller comes from the call-chain string <code>wpdb</code> stores in <code>$wpdb-&gt;queries[n][2]</code>, so it is a string of function names rather than a backtrace array. Only frames matching <code>Jankx</code> or <code>App\</code> are labelled as theme code; everything else shows as <code>(core only)</code>.</p>
+
+                <h3>Suggested investigation loop</h3>
+                <ol>
+                    <li><code>bench.php probe --scenario=home</code> for the headline numbers.</li>
+                    <li><code>analyze_existing.php</code> on any existing capture for self time and call counts.</li>
+                    <li><code>who_calls.php</code> to find where the hotspot is invoked.</li>
+                    <li><code>find_duplicate_queries.php</code> for the SQL side.</li>
+                    <li>Fix, then re-run <code>probe</code> and compare. <strong>Always check the HTML size before and after</strong> - if the output changed you broke a feature, however few queries remain.</li>
+                </ol>
+                <p>Do not optimise by call count while Xdebug is on: per-call overhead is inflated enough that a function called 17,000 times still costs single-digit milliseconds in production. Prioritise <code>curl_exec</code>, raw SQL counts, and any DB writes happening during render - those are not distorted by the profiler.</p>
 
                 <h2 id="flamegraph">Reading the flame graph</h2>
                 <p><code>graph</code> writes a self-contained HTML file into <code>benchmarks/report/</code> - open it directly in a browser, no server needed. Hovering a frame shows the function name, its self time, and its call count.</p>

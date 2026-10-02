@@ -23,6 +23,9 @@ cụ này đo cả hai:
 | `lib/CallProfiler.php` | Chạy tiến trình con dưới Xdebug, tìm file output |
 | `lib/CachegrindParser.php` | Phân tích output cachegrind của Xdebug thành call graph |
 | `lib/FlameGraph.php` | Vẽ call graph đã parse thành flame graph SVG/HTML độc lập |
+| `lib/analyze_existing.php` | Phân tích cachegrind đã thu, không cần server |
+| `lib/who_calls.php` | Chỉ ra hàm nào đang gọi một hotspot |
+| `lib/find_duplicate_queries.php` | Tìm SQL lặp và quy về đúng nơi phát |
 
 Artifact được ghi vào `benchmarks/.work/` và không được commit.
 
@@ -96,6 +99,93 @@ Hai chi tiết định dạng mà parser xử lý, cả hai đều làm hỏng k
 
 `cost unit` được in ra trong output của `calls` để có thể kiểm chứng phép đổi
 đơn vị. Luôn đối chiếu với `WP wall time` đã báo.
+
+## Công cụ chẩn đoán
+
+Ba script trong `benchmarks/lib/` dùng lại đúng bộ parser của `bench.php` nhưng
+tách riêng từng bước của chuỗi điều tra. Chúng bổ sung cho `calls`, không thay
+thế: `calls` trả lời "thời gian nằm ở đâu", các script này trả lời "ai đã gọi
+nó" và "SQL nào lãng phí".
+
+### Phân tích capture đã có (không cần server)
+
+`bench.php calls` luôn chạy lại collector, nên cần Xdebug và web server đang
+sống. Khi đã có sẵn file cachegrind trong `benchmarks/.work/` thì phân tích lại
+được offline:
+
+```bash
+# Mọi file trong .work/cachegrind_*
+php benchmarks/lib/analyze_existing.php
+
+# Một file cụ thể
+php benchmarks/lib/analyze_existing.php benchmarks/.work/cachegrind_home/jankx_home_23280
+```
+
+Script in ra ba khối: top self time, top call count, và các hàm liên quan
+DB/cache. File cachegrind trang chủ khoảng 90 MB nên mỗi lần phân tích mất
+20-30 giây.
+
+### Tìm hàm nào đang gọi hotspot
+
+Cachegrind không đáng tin ở chỗ file của một hàm: khi Xdebug tái sử dụng id tên,
+thuộc tính file sẽ trôi theo ngữ cảnh của *caller*. Ví dụ
+`WP_Scripts::get_highest_fetchpriority_with_dependents` hiện mang tên file của
+một lớp hoàn toàn không liên quan. Vì vậy phải tra call graph thay vì đọc cột
+file:
+
+```bash
+php benchmarks/lib/who_calls.php benchmarks/.work/cachegrind_home/jankx_home_23280
+```
+
+Script in tối đa 8 caller trực tiếp cho mỗi hotspot trong danh sách định sẵn
+(bao gồm `apply_filters`, `get_option`, `wpdb->query`, `WP_Query->query`...).
+
+### Tìm SQL lặp
+
+Script này không cần Xdebug, chỉ cần `SAVEQUERIES`:
+
+```bash
+php benchmarks/lib/find_duplicate_queries.php
+
+# Xem cấu trúc thô của một query bất kỳ trong log
+JANKX_DEBUG_ROW=120 php benchmarks/lib/find_duplicate_queries.php
+```
+
+Chạy từ thư mục theme, không cần server cũng không cần Xdebug. Script tự dựng
+ngữ cảnh request giống trình duyệt, boot WordPress, render front template, rồi
+đọc `$wpdb->queries`.
+
+Điểm quan trọng: output tách làm hai nhóm, và phải hiểu đúng mới dùng được.
+
+- **Exactly repeated** - cùng một câu SQL *nguyên văn* chạy nhiều lần. Đây mới
+  là lãng phí thật, và đây là thứ nên đi sửa.
+- **Same-shape different-params** - cùng dạng câu nhưng khác tham số (ID/term
+  khác nhau). Đây là batch access bình thường, *không* phải lãng phí. Cột
+  "redundant ms" của nhóm này chỉ là quy mô, không phải thời gian có thể tiết
+  kiệm.
+
+Đừng tin số "redundant" mà `collect.php` in ra: nó collapse literal nên gộp 52
+option khác nhau thành một nhóm và báo thừa. Muốn quy về đúng nơi phát thì dùng
+cột caller mà script này in ra.
+
+Caller lấy từ chuỗi call chain mà `wpdb` ghi vào `$wpdb->queries[n][2]`, nên nó
+là *chuỗi tên hàm*, không phải backtrace dạng mảng. Chỉ frame nào khớp `Jankx`
+hoặc `App\` mới được gắn nhãn là của theme; phần còn lại hiện là
+`(core only)`.
+
+### Quy trình điều tra đề xuất
+
+1. `bench.php probe --scenario=home` để có số tổng.
+2. `analyze_existing.php` trên một capture có sẵn để xem self time và call count.
+3. `who_calls.php` để biết hotspot được gọi từ đâu.
+4. `find_duplicate_queries.php` để kiểm tra phần SQL.
+5. Sửa, rồi chạy lại `probe` và so sánh. **Luôn đối chiếu kích thước HTML trước
+   và sau** - nếu HTML đổi thì đã phá chức năng, dù query giảm.
+
+Đừng tối ưu theo call count lúc đang bật Xdebug: overhead mỗi lời gọi hàm phóng
+đại mạnh, nên một hàm gọi 17.000 lần vẫn chỉ tốn vài mili-giây khi chạy thật.
+Ưu tiên `curl_exec`, số query SQL, và các lần ghi DB trong lúc render - những
+thứ đó không bị Xdebug làm méo.
 
 ## Baseline
 

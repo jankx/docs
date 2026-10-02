@@ -23,6 +23,9 @@ measures both:
 | `lib/CallProfiler.php` | Spawns the child process under Xdebug, locates output files |
 | `lib/CachegrindParser.php` | Parses Xdebug cachegrind output into a call graph |
 | `lib/FlameGraph.php` | Renders the parsed call graph as a standalone SVG/HTML flame graph |
+| `lib/analyze_existing.php` | Analyses an existing cachegrind capture, no server needed |
+| `lib/who_calls.php` | Shows which functions call a given hotspot |
+| `lib/find_duplicate_queries.php` | Finds repeated SQL and attributes it to a real call site |
 
 Artifacts are written to `benchmarks/.work/` and must not be committed.
 
@@ -97,6 +100,96 @@ ignored:
 
 `cost unit` is printed in the `calls` output so the conversion is verifiable.
 Always sanity-check it against the reported `WP wall time`.
+
+## Diagnostic tools
+
+Three scripts in `benchmarks/lib/` reuse the same parser as `bench.php` but
+split the investigation into separate steps. They complement `calls` rather
+than replace it: `calls` answers "where does the time go", these answer "who
+called it" and "which SQL is wasted".
+
+### Analyse an existing capture (no server required)
+
+`bench.php calls` always re-runs the collector, so it needs Xdebug and a live
+web server. Once cachegrind files exist under `benchmarks/.work/`, they can be
+re-analysed offline:
+
+```bash
+# Every file under .work/cachegrind_*
+php benchmarks/lib/analyze_existing.php
+
+# One specific file
+php benchmarks/lib/analyze_existing.php benchmarks/.work/cachegrind_home/jankx_home_23280
+```
+
+It prints three blocks: top self time, top call count, and DB/cache-related
+functions. A home-page capture is around 90 MB, so each run takes 20-30 seconds
+to parse.
+
+### Find what calls a hotspot
+
+Cachegrind is unreliable about a function's file: when Xdebug reuses a name id,
+the file attribute drifts to the *caller*'s context.
+`WP_Scripts::get_highest_fetchpriority_with_dependents`, for example, gets
+stamped with the name of a completely unrelated class. Walk the call graph
+instead of reading that column:
+
+```bash
+php benchmarks/lib/who_calls.php benchmarks/.work/cachegrind_home/jankx_home_23280
+```
+
+It prints up to 8 direct callers for each hotspot in a fixed target list
+(including `apply_filters`, `get_option`, `wpdb->query`, `WP_Query->query`, and
+so on).
+
+### Find repeated SQL
+
+This one needs no Xdebug, only `SAVEQUERIES`:
+
+```bash
+php benchmarks/lib/find_duplicate_queries.php
+
+# Inspect the raw structure of any logged query
+JANKX_DEBUG_ROW=120 php benchmarks/lib/find_duplicate_queries.php
+```
+
+Run it from the theme directory; no server and no Xdebug needed. It builds a
+browser-like request context, boots WordPress, renders the front template, then
+reads `$wpdb->queries`.
+
+The important part: the output is split into two groups, and reading them
+correctly is the whole point of the tool.
+
+- **Exactly repeated** - the identical SQL statement ran multiple times. This is
+  genuine waste and this is what you should go fix.
+- **Same-shape different-params** - the same statement shape with different
+  parameters (different IDs/terms). This is normal batched access, *not* waste.
+  The "redundant ms" column for this group is just volume, not time you can
+  save.
+
+Do not trust the "redundant" figure printed by `collect.php`: it collapses
+literals, so 52 distinct options get merged into one group and the number
+overshoots. Use the caller column this script prints instead.
+
+The caller comes from the call-chain string `wpdb` stores in
+`$wpdb->queries[n][2]`, so it is a string of function names rather than a
+backtrace array. Only frames matching `Jankx` or `App\` are labelled as theme
+code; everything else shows as `(core only)`.
+
+### Suggested investigation loop
+
+1. `bench.php probe --scenario=home` for the headline numbers.
+2. `analyze_existing.php` on any existing capture for self time and call counts.
+3. `who_calls.php` to find where the hotspot is invoked.
+4. `find_duplicate_queries.php` for the SQL side.
+5. Fix, then re-run `probe` and compare. **Always check the HTML size before and
+   after** - if the output changed you broke a feature, however few queries
+   remain.
+
+Do not optimise by call count while Xdebug is on: per-call overhead is inflated
+enough that a function called 17,000 times still costs single-digit
+milliseconds in production. Prioritise `curl_exec`, raw SQL counts, and any DB
+writes happening during render - those are not distorted by the profiler.
 
 ## Baseline
 

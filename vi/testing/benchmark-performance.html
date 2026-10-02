@@ -323,6 +323,7 @@
                     <ul class="sidebar-links">
                         <li><a href="#muc-dich">Mục đích</a></li>
                         <li><a href="#cong-cu">Công cụ</a></li>
+                        <li><a href="#chan-doan">Công cụ chẩn đoán</a></li>
                         <li><a href="#flamegraph">Đọc flame graph</a></li>
                         <li><a href="#baseline">Baseline</a></li>
                         <li><a href="#phat-hien">Phát hiện</a></li>
@@ -366,6 +367,9 @@
                         <tr><td><code>lib/CallProfiler.php</code></td><td>Chạy tiến trình con dưới Xdebug, tìm file output</td></tr>
                         <tr><td><code>lib/CachegrindParser.php</code></td><td>Phân tích output cachegrind của Xdebug thành call graph</td></tr>
                         <tr><td><code>lib/FlameGraph.php</code></td><td>Vẽ call graph đã parse thành flame graph SVG/HTML độc lập</td></tr>
+                        <tr><td><code>lib/analyze_existing.php</code></td><td>Phân tích cachegrind đã thu, không cần server</td></tr>
+                        <tr><td><code>lib/who_calls.php</code></td><td>Chỉ ra hàm nào đang gọi một hotspot</td></tr>
+                        <tr><td><code>lib/find_duplicate_queries.php</code></td><td>Tìm SQL lặp và quy về đúng nơi phát</td></tr>
                     </tbody>
                 </table>
                 <p>Artifact được ghi vào <code>benchmarks/.work/</code> và không được commit.</p>
@@ -406,6 +410,48 @@ php benchmarks/bench.php graph --scenario=home --file=benchmarks/.work/cachegrin
                     <li>Xdebug ghi <code>positions: line</code>, thêm một cột số dòng ở đầu mỗi cost line. Đọc cột đó như cost thời gian lại làm thời gian phình lên lần nữa.</li>
                 </ul>
                 <p><code>cost unit</code> được in ra trong output của <code>calls</code> để có thể kiểm chứng phép đổi đơn vị. Luôn đối chiếu với <code>WP wall time</code> đã báo.</p>
+
+                <h2 id="chan-doan">Công cụ chẩn đoán</h2>
+                <p>Ba script dưới đây dùng lại đúng bộ parser của <code>bench.php</code> nhưng tách riêng từng bước của chuỗi điều tra. Chúng bổ sung cho <code>calls</code>, không thay thế: <code>calls</code> trả lời "thời gian nằm ở đâu", các script này trả lời "ai đã gọi nó" và "SQL nào lãng phí".</p>
+
+                <h3>Phân tích capture đã có (không cần server)</h3>
+                <p><code>bench.php calls</code> luôn chạy lại collector, nên cần Xdebug và web server đang sống. Khi đã có sẵn file cachegrind trong <code>benchmarks/.work/</code> thì phân tích lại được offline:</p>
+                <pre><code># Mọi file trong .work/cachegrind_*
+php benchmarks/lib/analyze_existing.php
+
+# Một file cụ thể
+php benchmarks/lib/analyze_existing.php benchmarks/.work/cachegrind_home/jankx_home_23280</code></pre>
+                <p>In ra ba khối: top self time, top call count, và các hàm liên quan DB/cache. File cachegrind trang chủ khoảng 90 MB nên mỗi lần phân tích mất 20&ndash;30 giây.</p>
+
+                <h3>Tìm hàm nào đang gọi hotspot</h3>
+                <p>Cachegrind không đáng tin ở chỗ file của một hàm: khi Xdebug tái sử dụng id tên, thuộc tính file sẽ trôi theo ngữ cảnh của <em>caller</em>. Ví dụ <code>WP_Scripts::get_highest_fetchpriority_with_dependents</code> hiện mang tên file của một lớp hoàn toàn không liên quan. Vì vậy phải tra call graph thay vì đọc cột file:</p>
+                <pre><code>php benchmarks/lib/who_calls.php benchmarks/.work/cachegrind_home/jankx_home_23280</code></pre>
+                <p>Script in tối đa 8 caller trực tiếp cho mỗi hotspot trong danh sách định sẵn (bao gồm <code>apply_filters</code>, <code>get_option</code>, <code>wpdb-&gt;query</code>, <code>WP_Query-&gt;query</code>&hellip;).</p>
+
+                <h3>Tìm SQL lặp</h3>
+                <p>Script này không cần Xdebug, chỉ cần <code>SAVEQUERIES</code>:</p>
+                <pre><code>php benchmarks/lib/find_duplicate_queries.php
+
+# Xem cấu trúc thô của một query bất kỳ trong log
+JANKX_DEBUG_ROW=120 php benchmarks/lib/find_duplicate_queries.php</code></pre>
+                <p>Chạy từ thư mục theme, không cần server cũng không cần Xdebug. Nó tự dựng ngữ cảnh request giống trình duyệt, boot WordPress, render front template, rồi đọc <code>$wpdb-&gt;queries</code>.</p>
+                <p><strong>Điểm quan trọng:</strong> output tách làm hai nhóm, và phải hiểu đúng mới dùng được:</p>
+                <ul>
+                    <li><strong>Exactly repeated</strong> - cùng một câu SQL <em>nguyên văn</em> chạy nhiều lần. Đây mới là lãng phí thật, và đây là thứ nên đi sửa.</li>
+                    <li><strong>Same-shape different-params</strong> - cùng dạng câu nhưng khác tham số (ID/term khác nhau). Đây là batch access bình thường, <em>không</em> phải lãng phí. Cột "redundant ms" của nhóm này chỉ là quy mô, không phải thời gian có thể tiết kiệm.</li>
+                </ul>
+                <p>Đừng tin số "redundant" mà <code>collect.php</code> in ra: nó collapse literal nên gộp 52 option khác nhau thành một nhóm và báo thừa. Muốn quy về đúng nơi phát thì dùng cột caller mà script này in ra.</p>
+                <p>Caller lấy từ chuỗi call chain mà <code>wpdb</code> ghi vào <code>$wpdb-&gt;queries[n][2]</code>, nên nó là <em>chuỗi tên hàm</em>, không phải backtrace dạng mảng. Chỉ frame nào khớp <code>Jankx</code> hoặc <code>App\</code> mới được gắn nhãn là của theme; phần còn lại hiện là <code>(core only)</code>.</p>
+
+                <h3>Quy trình điều tra đề xuất</h3>
+                <ol>
+                    <li><code>bench.php probe --scenario=home</code> để có số tổng.</li>
+                    <li><code>analyze_existing.php</code> trên một capture có sẵn để xem self time và call count.</li>
+                    <li><code>who_calls.php</code> để biết hotspot được gọi từ đâu.</li>
+                    <li><code>find_duplicate_queries.php</code> để kiểm tra phần SQL.</li>
+                    <li>Sửa, rồi chạy lại <code>probe</code> và so sánh. <strong>Luôn đối chiếu kích thước HTML trước và sau</strong> &mdash; nếu HTML đổi thì đã phá chức năng, dù query giảm.</li>
+                </ol>
+                <p>Đừng tối ưu theo call count lúc đang bật Xdebug: overhead mỗi lời gọi hàm phóng đại mạnh, nên một hàm gọi 17.000 lần vẫn chỉ tốn vài mili-giây khi chạy thật. Ưu tiên <code>curl_exec</code>, số query SQL, và các lần ghi DB trong lúc render &mdash; những thứ đó không bị Xdebug làm méo.</p>
 
                 <h2 id="flamegraph">Đọc flame graph</h2>
                 <p>Lệnh <code>graph</code> ghi ra một file HTML độc lập trong <code>benchmarks/report/</code> - mở trực tiếp bằng trình duyệt, không cần server. Rê chuột lên một frame để xem tên hàm, self time và số lần gọi.</p>
