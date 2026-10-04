@@ -267,11 +267,16 @@ class ProfileController extends AbstractController
 }
 ```
 
-### Bước 2: Đăng ký namespace trong routes.php
+### Bước 2: Đăng ký namespace bằng manifest.json
 
-```php
-// includes/framework/Ajax/routes.php
-$router->addNamespace('account', 'Jankx\\Extensions\\MyAccount\\Ajax\\Controller\\');
+Thay vì sửa file core của Jankx, bạn mở file `manifest.json` của extension và khai báo:
+
+```json
+{
+    ...
+    "ajax_slug": "account",
+    "ajax_namespace": "Jankx\\Extensions\\MyAccount\\Ajax\\Controller\\"
+}
 ```
 
 ### Bước 3: Test endpoint
@@ -383,19 +388,34 @@ $this->error('Du lieu khong hop le.', 422, ['field' => 'email']);
 
 ## 9. Đăng ký namespace Extension
 
-File trung tâm: `includes/framework/Ajax/routes.php`
+Hệ thống Fast AJAX tự động quét và nạp namespace từ file `manifest.json` của các extension (cả ở theme cha `jankx` và child theme).
 
-```php
-<?php
-// Mỗi extension đăng ký 1 dòng:
-$router->addNamespace('account',  'Jankx\\Extensions\\MyAccount\\Ajax\\Controller\\');
-$router->addNamespace('tour',     'Jankx\\Extensions\\TourBuilder\\Ajax\\Controller\\');
-$router->addNamespace('comment',  'Jankx\\Extensions\\CommentMedia\\Ajax\\Controller\\');
-$router->addNamespace('metrics',  'Jankx\\Extensions\\Metrics\\Ajax\\Controller\\');
-$router->addNamespace('coupon',   'Jankx\\Extensions\\CouponSystem\\Ajax\\Controller\\');
-$router->addNamespace('product',  'Jankx\\Extensions\\EcommerceProduct\\Ajax\\Controller\\');
-$router->addNamespace('ai',       'Jankx\\Extensions\\AiChatbox\\Ajax\\Controller\\');
+Thay vì phải hardcode khai báo trong file `routes.php` như trước, mỗi extension chỉ cần thêm 2 field `ajax_slug` và `ajax_namespace` vào `manifest.json`.
+
+### Cấu hình `manifest.json`
+
+```json
+{
+    "name": "Tên Extension",
+    "extension_id": "ten-extension",
+    ...
+    "ajax_slug": "slug-tren-url",
+    "ajax_namespace": "Jankx\\Extensions\\TenExtension\\Ajax\\Controller\\"
+}
 ```
+
+- `ajax_slug`: Là thành phần `{namespace}` trên URL (`/jankx-ajax/{namespace}/...`)
+- `ajax_namespace`: Là thư mục chứa các class Controller (nhớ dùng escape backslash `\\`).
+
+### Ví dụ
+Với khai báo:
+```json
+{
+    "ajax_slug": "ecommerce",
+    "ajax_namespace": "Jankx\\Extensions\\Ecommerce\\Ajax\\Controller\\"
+}
+```
+URL `/jankx-ajax/ecommerce/cart/get` sẽ tự động route tới `Jankx\Extensions\Ecommerce\Ajax\Controller\CartController::get()`.
 
 ---
 
@@ -406,7 +426,7 @@ $router->addNamespace('ai',       'Jankx\\Extensions\\AiChatbox\\Ajax\\Controlle
 - [ ] Tạo `Controller` class trong `src/Ajax/Controller/`
 - [ ] Move logic từ handler method cũ vào action method mới
 - [ ] Thêm middleware phù hợp (Nonce, Auth, RateLimit)
-- [ ] Đăng ký namespace trong `routes.php`
+- [ ] Khai báo `ajax_slug` và `ajax_namespace` trong `manifest.json` của extension
 - [ ] Cập nhật JS: đổi `ajaxUrl` + `action` sang URL mới
 - [ ] Test endpoint mới hoạt động (curl hoặc browser)
 - [ ] Giữ lại endpoint cũ song song trong thời gian chuyển đổi
